@@ -12,6 +12,9 @@ using Rookie.AssetManagement.Business;
 using Rookie.AssetManagement.DataAccessor;
 using FluentValidation.AspNetCore;
 using System.Reflection;
+using Rookie.AssetManagement.DataAccessor.Entities;
+using Microsoft.AspNetCore.Identity;
+using Rookie.AssetManagement.DataAccessor.Data.Seeds;
 
 namespace Rookie.AssetManagement
 {
@@ -54,7 +57,7 @@ namespace Rookie.AssetManagement
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole<int>> roleManager, UserManager<User> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -89,6 +92,9 @@ namespace Rookie.AssetManagement
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            DefaultRoles.SeedAsync(roleManager).Wait();
+            DefaultUsers.SeedAsync(userManager).Wait();
         }
     }
 }

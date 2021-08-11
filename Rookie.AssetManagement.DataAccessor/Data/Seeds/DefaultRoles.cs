@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Rookie.AssetManagement.Constants;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rookie.AssetManagement.DataAccessor.Data.Seeds
 {

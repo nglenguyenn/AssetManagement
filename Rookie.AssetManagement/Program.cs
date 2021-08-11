@@ -16,14 +16,14 @@ namespace Rookie.AssetManagement
         {
             var host = CreateHostBuilder(args).Build();
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
 
-                var userManager = services.GetRequiredService<UserManager<User>>();
+            //    var userManager = services.GetRequiredService<UserManager<User>>();
 
-                await DefaultUsers.SeedAsync(userManager);
-            }
+            //    await DefaultUsers.SeedAsync(userManager);
+            //}
 
             await host.RunAsync();
         }

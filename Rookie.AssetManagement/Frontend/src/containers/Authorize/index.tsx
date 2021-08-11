@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from 'react-bootstrap';
 import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
 
 import HeaderLogIn from "../Layout/HeaderLogIn";
 import TextField from "src/components/FormInputs/TextField";
@@ -12,6 +13,11 @@ const initialValues: ILoginModel = {
   userName: '',
   password: '',
 }
+
+const validationSchema = Yup.object().shape({
+  userName: Yup.string().trim().required('Required'),
+  password: Yup.string().trim().required('Required')
+});
 
 const Login = () => {
   const [isShow, setShow] = useState(true);
@@ -51,6 +57,7 @@ const Login = () => {
           <Modal.Body>
             <Formik
               initialValues={initialValues}
+              validationSchema={validationSchema}
               onSubmit={(values) => {
                 dispatch(login(values));
               }}
@@ -68,7 +75,7 @@ const Login = () => {
 
                   <div className="text-center mt-5">
                     <button className="btn btn-danger"
-                      type="submit" disabled={loading}>
+                      type="submit" disabled={!(actions.isValid && actions.dirty)}>
                       Log in
                       {(loading) && <img src="/oval.svg" className='w-4 h-4 ml-2 inline-block' />}
                     </button>

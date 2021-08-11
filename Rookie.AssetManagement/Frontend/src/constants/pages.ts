@@ -13,3 +13,7 @@ export const ASSIGNMENT = '/assignment';
 export const RETURN = '/return';
 
 export const REPORT = '/report';
+
+export const CHANGEPASSWORD = '/changepassword'; 
+
+export const FIRSTTIMECHANGEPASSWORD = '/firsttime';

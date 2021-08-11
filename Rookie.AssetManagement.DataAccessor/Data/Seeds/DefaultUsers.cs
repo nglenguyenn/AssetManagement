@@ -12,45 +12,66 @@ namespace Rookie.AssetManagement.DataAccessor.Data.Seeds
     {
         public static async Task SeedAsync(UserManager<User> userManager)
         {
-            if (!userManager.Users.Any())
+            if (userManager.FindByNameAsync("adminhn").Result == null ||userManager.FindByNameAsync("adminhcm").Result == null)
             {
-                var adminHCM = new User
+                var adminList = new List<User>()
                 {
-                    UserName = "adminhcm",
-                    StaffCode = "SD0000",
-                    JoinedDate = DateTime.Now,
-                    DateOfBirth = DateTime.Now.AddYears(-18),
-                    Location = Location.HCM,
-                    Type = Roles.Admin,
-                    IsDisabled = false,
-                    IsFirstChangePassword = false, 
+                    new User
+                    {
+                        UserName = "adminhcm",
+                        StaffCode = "SD0000",
+                        JoinedDate = DateTime.Now,
+                        DateOfBirth = DateTime.Now.AddYears(-18),
+                        Location = Location.HCM,
+                        Type = Roles.Admin,
+                        IsDisabled = false,
+                        IsFirstChangePassword = false,
+                    },
+                    new User
+                    {
+                        UserName = "adminhn",
+                        StaffCode = "SD0001",
+                        JoinedDate = DateTime.Now,
+                        DateOfBirth = DateTime.Now.AddYears(-18),
+                        Location = Location.HN,
+                        Type = Roles.Admin,
+                        IsDisabled = false,
+                        IsFirstChangePassword = false,
+                    },
                 };
 
-                var adminHN = new User
+                foreach(User user in adminList)
                 {
-                    UserName = "adminhn",
-                    StaffCode = "SD0001",
-                    JoinedDate = DateTime.Now,
-                    DateOfBirth = DateTime.Now.AddYears(-18),
-                    Location = Location.HN,
-                    Type = Roles.Admin,
-                    IsDisabled = false,
-                    IsFirstChangePassword = false,
-                };
-
-                IdentityResult resultHCM =  await userManager.CreateAsync(adminHCM, AdminPassword.AdminHCM);
-                IdentityResult resultHN = await userManager.CreateAsync(adminHN, AdminPassword.AdminHN); 
-
-                if(resultHCM.Succeeded)
-                {
-                    userManager.AddToRoleAsync(adminHCM, Roles.Admin).Wait();
+                    await AddAdminUser(userManager, user); 
                 }
-                if (resultHN.Succeeded)
-                {
-                    userManager.AddToRoleAsync(adminHN, Roles.Admin).Wait();
-                }
+
             }
 
+        }
+
+        public static async Task AddAdminUser (UserManager<User> userManager, User user)
+        {
+            string adminPassword = "";
+
+            switch(user.Location)
+            {
+                case Location.HCM:
+                    adminPassword = AdminPassword.AdminHCM;
+                    break;
+                case Location.HN:
+                    adminPassword = AdminPassword.AdminHN;
+                    break;
+                default:
+                    return; 
+            }
+
+
+            IdentityResult result = await userManager.CreateAsync(user, adminPassword);
+
+            if (result.Succeeded)
+            {
+                userManager.AddToRoleAsync(user, Roles.Admin).Wait();
+            }
         }
     }
 }
