@@ -6,6 +6,8 @@ export const NOTFOUND = '/notfound';
 
 export const USER = '/user';
 
+export const CREATE_USER = '/user/create';
+
 export const ASSET = '/asset';
 
 export const ASSIGNMENT = '/assignment';

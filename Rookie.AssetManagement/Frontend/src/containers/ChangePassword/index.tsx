@@ -15,8 +15,8 @@ const initialValues: IChangepassWord = {
 }
 
 const validationSchema = Yup.object().shape({
-    currentPassword: Yup.string().required('Required'),
-    newPassword: Yup.string().required('Required'),
+    currentPassword: Yup.string().trim().required('Required'),
+    newPassword: Yup.string().trim().required('Required')
 });
 
 const ChangePassword = () => {
@@ -45,7 +45,7 @@ const ChangePassword = () => {
                             validationSchema={validationSchema}
                             onSubmit={(values) => { }}
                         >
-                            {(action) => (
+                            {(actions) => (
                                 <Form>
                                     <PasswordField name="currentPassword" label="CurrentPassword" isrequired />
                                     <PasswordField name="newPassword" label="NewPassword" isrequired />
@@ -58,7 +58,7 @@ const ChangePassword = () => {
 
                                     <div className="text-right mt-5 ">
                                         <button className="btn btn-danger mr-3"
-                                            type="submit" disabled={loading}>
+                                            type="submit" disabled={!(actions.isValid && actions.dirty)}>
                                             Save
                                             {(loading) && <img src="/oval.svg" alt="" className='w-4 h-4 ml-2 inline-block mr-1' />}
                                         </button>
