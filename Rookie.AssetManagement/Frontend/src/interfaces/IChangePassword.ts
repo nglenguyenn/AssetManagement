@@ -1,4 +1,4 @@
 export default interface IChangePassword {
-    currentPassword: string;
+    oldPassword: string;
     newPassword: string;
 }

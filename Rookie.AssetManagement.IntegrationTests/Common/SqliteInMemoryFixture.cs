@@ -28,6 +28,7 @@ namespace Rookie.AssetManagement.IntegrationTests.Common
 
         public virtual ApplicationDbContext Context => ServiceProvider.GetRequiredService<ApplicationDbContext>();
         public virtual UserManager<User> UserManager => ServiceProvider.GetRequiredService<UserManager<User>>();
+        public virtual RoleManager<IdentityRole<int>> RoleManager => ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
         public virtual void CreateDatabase()
         {

@@ -12,7 +12,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 const PasswordField: React.FC<InputFieldProps> = (props) => {
-    const [visible, setVisibility] = useState(true);
+    const [visible, setVisibility] = useState(false);
     const [inputType, setInputType] = useState("password");
     const [field, { error, touched }, meta] = useField(props);
     const { label, isrequired, notvalidate } = props;
@@ -49,7 +49,7 @@ const PasswordField: React.FC<InputFieldProps> = (props) => {
                 <div className="col">
                     <div className="d-flex justify-content-start">
                         <input className={`form-control ${validateClass()}`} {...field} {...props} type={inputType} />
-                        <button className="btn mr-3" onClick={handleVisible}>
+                        <button className="btn mr-3" type="button" onClick={handleVisible}>
                             {visible ? <EyeFill /> : <EyeSlashFill />}
                         </button>
                     </div>

@@ -54,6 +54,17 @@ namespace Rookie.AssetManagement
                 configuration.RootPath = "Frontend/build";
             });
             services.AddSwagger();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowOrigins",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,16 +73,19 @@ namespace Rookie.AssetManagement
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rookie.AssetManagement v1"));
             }
             else
             {
                 app.UseMiddleware<ErrorHandler>();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rookie.AssetManagement v1"));
+
             app.UseHttpsRedirection();
             app.UseSpaStaticFiles();
+
+            app.UseCors("AllowOrigins");
 
             app.UseRouting();
 

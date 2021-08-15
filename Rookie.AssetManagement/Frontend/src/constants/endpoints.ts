@@ -1,6 +1,10 @@
 const Endpoints = {
+    login: 'api/account/login',
+    getRole: 'api/account/getaccountrole',
     authorize: 'api/authorize',
-    me: 'api/authorize/me'
+    changePassword: 'api/account/changepassword',
+    me: 'api/account/getaccount',
+    firstTimeChangePassword: 'api/account/changepasswordfirsttimelogin'
 };
 
 export default Endpoints;

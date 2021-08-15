@@ -3,6 +3,7 @@ using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,7 +27,7 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
                 new object[] 
                 { 
                     null,
-                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountLoginDto.UserName)),
+                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountLoginDto.Username)),
                 }
             };
         }
@@ -50,6 +51,30 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
                     string.Format(ErrorTypes.Common.RequiredError, nameof(AccountLoginDto.Password)),
                 }
             };
+        }
+
+        public static IEnumerable<object[]> InValidNewPassword()
+        {
+            return new object[][]
+            {
+                new object[]
+                {
+                    null,
+                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountChangePasswordFirstTimeDto.NewPassword)),
+                }
+            };
+        }
+        public static ClaimsIdentity GetClaims()
+        {
+            var authClaims = new List<Claim>
+                {
+                    new Claim(UserClaims.Id, "1"),
+                    new Claim(UserClaims.StaffCode, "SD0001"),
+                    new Claim(UserClaims.FullName, $"Tester Full Name"),
+                    new Claim(UserClaims.Location, "HN"),
+                };
+            var claimsIdentity = new ClaimsIdentity(authClaims);
+            return claimsIdentity;
         }
     }
 }

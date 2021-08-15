@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useHistory, useLocation } from "react-router-dom";
 import ConfirmModal from "src/components/ConfirmModal";
+import ChangePasswordModal from "../ChangePassword";
 import { HOME } from "src/constants/pages";
 
 import { useAppDispatch, useAppSelector } from "src/hooks/redux";
-import { logout } from "../Authorize/reducer";
+import { cleanUp, logout } from "../Authorize/reducer";
+import { handleChangePassword } from "../Authorize/sagas/handles";
+import { Status } from "src/constants/status";
 
 // eslint-disable-next-line react/display-name
 const CustomToggle = React.forwardRef<any, any>(({ children, onClick }, ref): any => (
@@ -24,11 +27,12 @@ const CustomToggle = React.forwardRef<any, any>(({ children, onClick }, ref): an
 const Header = () => {
   const history = useHistory();
   const { pathname } = useLocation();
-  const { account } = useAppSelector(state => state.authReducer);
+  const { account, status } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
 
   const [showModalChangePasswod, setShowModalChangePasswod] = useState(false);
   const [showConfirmLogout, setShowConfirmLogout] = useState(false);
+  const [isChangePasswordSuccess, setIsChangePasswordSuccess] = useState(false);
 
   const headerName = () => {
     const pathnameSplit = pathname.split('/');
@@ -41,7 +45,9 @@ const Header = () => {
   };
 
   const handleHide = () => {
+    dispatch(cleanUp());
     setShowModalChangePasswod(false);
+    setIsChangePasswordSuccess(false);
   }
 
   const handleLogout = () => {
@@ -57,6 +63,10 @@ const Header = () => {
     dispatch(logout());
   };
 
+  const handleChangePasswordSuccess = () => {
+    setIsChangePasswordSuccess(true);
+  };
+
   return (
     <>
       <div className='header align-items-center font-weight-bold'>
@@ -66,7 +76,7 @@ const Header = () => {
           <div className='ml-auto text-white'>
             <Dropdown>
               <Dropdown.Toggle as={CustomToggle}>
-                {account?.userName}
+                {account?.username}
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
@@ -79,7 +89,7 @@ const Header = () => {
       </div>
 
       <ConfirmModal
-        title="Are you sure"
+        title="Are you sure?"
         isShow={showConfirmLogout}
         onHide={handleCancleLogout}
       >
@@ -91,6 +101,15 @@ const Header = () => {
           </div>
         </div>
       </ConfirmModal>
+
+      <ChangePasswordModal
+        isShow={showModalChangePasswod}
+        onHide={handleHide}
+        hide={handleHide}
+      >
+        <button className="btn btn-outline-secondary" onClick={handleHide} type="button">Cancel</button>
+      </ChangePasswordModal>
+
     </>
   );
 };

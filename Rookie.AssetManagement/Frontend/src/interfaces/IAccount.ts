@@ -1,7 +1,8 @@
 export default interface IAccount {
+    status: string;
     id: number;
     token?: string;
-    userName: string;
+    username: string;
     role: string;
     fullName: string;
     staffCode: string;

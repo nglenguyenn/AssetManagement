@@ -1,4 +1,6 @@
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   ASSET,
@@ -6,34 +8,60 @@ import {
   HOME, REPORT, RETURN, USER,
 } from "src/constants/pages";
 import Roles from "src/constants/roles";
-import { useAppSelector } from "src/hooks/redux";
+import { useAppDispatch, useAppSelector } from "src/hooks/redux";
+import { getLocalStorage } from "src/utils/localStorage";
 
 const SideBar = () => {
-  const { account } = useAppSelector(state => state.authReducer);
+  const dispatch = useAppDispatch();
+  const { account, isAuth } = useAppSelector(state => state.authReducer);
+
+  const [items, setItems] = useState([
+    {
+      id: 0, name: 'Home', path: HOME,
+      roles: [Roles.Admin, Roles.Staff]
+    },
+    {
+      id: 1, name: 'Manage User', path: USER, 
+      roles: [Roles.Admin]
+    },
+    {
+      id: 2, name: 'Manage Asset', path: ASSET, 
+      roles: [Roles.Admin]
+    },
+    {
+      id: 3, name: 'Manage Assignment', path: ASSIGNMENT, 
+      roles: [Roles.Admin]
+    },
+    {
+      id: 4, name: 'Request for Returning', path: RETURN, 
+      roles: [Roles.Admin]
+    },
+    {
+      id: 5, name: 'Report', path: REPORT, 
+      roles: [Roles.Admin]
+    },
+  ]);
+
+  useEffect (() => {
+  }, [account, isAuth]);
 
   return (
     <div className="nav-left mb-5">
       <img src='/images/Logo_lk.png' alt='logo' />
       <p className="brand intro-x">Online Asset Management</p>
-
-      <NavLink className="navItem intro-x" exact to={HOME}>
-        <button className="btnCustom">Home</button>
-      </NavLink>
-      <NavLink className="navItem intro-x" exact to={USER}>
-        <button className="btnCustom">Manage User</button>
-      </NavLink>
-      <NavLink className="navItem intro-x" exact to={ASSET}>
-        <button className="btnCustom">Manage Asset</button>
-      </NavLink>
-      <NavLink className="navItem intro-x" exact to={ASSIGNMENT}>
-        <button className="btnCustom">Manage Assignment</button>
-      </NavLink>
-      <NavLink className="navItem intro-x" exact to={RETURN}>
-        <button className="btnCustom">Request for Returning</button>
-      </NavLink>
-      <NavLink className="navItem intro-x" exact to={REPORT}>
-        <button className="btnCustom">Report</button>
-      </NavLink>
+      {
+        items.map((item, index) => {
+          const userRole = account?.role;
+          if (userRole !== undefined) {
+            if (item.roles.indexOf(userRole) >= 0)
+              return (
+                <NavLink key={index} className="navItem intro-x" exact to={item.path}>
+                  <button className="btnCustom">{item.name}</button>
+                </NavLink>
+              )
+          }
+        })
+      }
     </div>
   );
 };

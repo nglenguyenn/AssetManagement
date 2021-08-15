@@ -1,18 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { SetStatusType } from "src/constants/status";
+import { Status, SetStatusType } from "src/constants/status";
+import IStatus from "src/interfaces/IStatus"; 
 import IAccount from "src/interfaces/IAccount";
 import IChangePassword from "src/interfaces/IChangePassword";
+import IFirstTimeChangePassword from "src/interfaces/IFirstTimeChangePassword"
 import IError from "src/interfaces/IError";
 import ILoginModel from "src/interfaces/ILoginModel";
 import ISubmitAction from "src/interfaces/ISubmitActions";
 import request from "src/services/request";
 import { getLocalStorage, removeLocalStorage, setLocalStorage } from "src/utils/localStorage";
+import IAccountRole from "src/interfaces/IAccountRole";
 
 type AuthState = {
     loading: boolean;
     isAuth: boolean,
     account?: IAccount;
+    accountRoles?: IAccountRole;
     status?: number;
     error?: IError;
 }
@@ -37,11 +41,20 @@ const AuthSlice = createSlice({
 
             return {
                 ...state,
-                // status: Status.Success,
-                account,
+                status: Status.Success,
+                account: account,
                 isAuth: true,
                 loading: false,
             };
+        },
+        setRole: (state: AuthState, action: PayloadAction<IAccountRole>): AuthState => {
+            const accountRoles = action.payload; 
+
+            return {
+                ...state, 
+                accountRoles,
+                loading: false,
+            }
         },
         setStatus: (state: AuthState, action: PayloadAction<SetStatusType>) =>
         {
@@ -56,6 +69,7 @@ const AuthSlice = createSlice({
         },
         me: (state) => {
             if (token) {
+                console.log(token) ; 
                 request.setAuthentication(token);
             }
         },
@@ -64,6 +78,12 @@ const AuthSlice = createSlice({
             loading: true,
         }),
         changePassword: (state: AuthState, action: PayloadAction<ISubmitAction<IChangePassword>>) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        firstTimeChangePassword: (state: AuthState, action: PayloadAction<ISubmitAction<IFirstTimeChangePassword>>) => {
             return {
                 ...state,
                 loading: true,
@@ -91,7 +111,7 @@ const AuthSlice = createSlice({
 });
 
 export const {
-    setAccount, login, setStatus, me, changePassword, logout, cleanUp,
+    setAccount, login, setStatus, me, changePassword, logout, cleanUp, setRole, firstTimeChangePassword
 } = AuthSlice.actions;
 
 export default AuthSlice.reducer;

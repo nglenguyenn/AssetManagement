@@ -25,15 +25,15 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators
         [MemberData(nameof(AccountTestData.ValidUsername), MemberType = typeof(AccountTestData))]
         public void NotHaveErrorWhenUsernameIsValid(string username) =>
             _testRunner
-                .For(m => m.UserName = username)
-                .ShouldNotHaveErrorsFor(m => m.UserName);
+                .For(m => m.Username = username)
+                .ShouldNotHaveErrorsFor(m => m.Username);
 
         [Theory]
         [MemberData(nameof(AccountTestData.InValidUsername), MemberType = typeof(AccountTestData))]
         public void HaveErrorWhenUsernameIsInValid(string username, string errorMessage) =>
             _testRunner
-                .For(m => m.UserName = username)
-                .ShouldHaveErrorsFor(m => m.UserName, errorMessage);
+                .For(m => m.Username = username)
+                .ShouldHaveErrorsFor(m => m.Username, errorMessage);
 
         [Theory]
         [MemberData(nameof(AccountTestData.ValidPassword), MemberType = typeof(AccountTestData))]
