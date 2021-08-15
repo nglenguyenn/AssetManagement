@@ -15,7 +15,6 @@ import Roles from "src/constants/roles";
 import { changePassword, me } from "src/containers/Authorize/reducer";
 import Layout from "src/containers/Layout";
 
-
 const Home = lazy(() => import("../containers/Home"));
 const Login = lazy(() => import("../containers/Authorize"));
 const User = lazy(() => import("../containers/User"));

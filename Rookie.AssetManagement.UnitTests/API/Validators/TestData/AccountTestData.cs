@@ -26,7 +26,7 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
                 new object[] 
                 { 
                     null,
-                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountLoginDto.Username)),
+                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountLoginDto.UserName)),
                 }
             };
         }

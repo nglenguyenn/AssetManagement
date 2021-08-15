@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using Rookie.AssetManagement.Constants;
 using Microsoft.AspNetCore.Identity;
 using Rookie.AssetManagement.DataAccessor.Entities;
-using System.Linq;
 using System.Collections.Generic;
+using Rookie.AssetManagement.Contracts.Enums;
+using Rookie.AssetManagement.Contracts.Constants;
 
 namespace Rookie.AssetManagement.DataAccessor.Data.Seeds
 {

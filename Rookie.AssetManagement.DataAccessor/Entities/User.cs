@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Rookie.AssetManagement.Constants;
+using Rookie.AssetManagement.Contracts.Enums;
 using System;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Rookie.AssetManagement.DataAccessor.Entities
 {
@@ -17,7 +15,6 @@ namespace Rookie.AssetManagement.DataAccessor.Entities
         public string StaffCode { get; set; }
         override public string UserName { get; set; }
         public Location Location { get; set; }
-
         public bool IsFirstChangePassword { get; set; }
         public bool IsDisabled { get; set; }
 

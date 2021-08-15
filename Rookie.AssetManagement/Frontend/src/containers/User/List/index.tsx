@@ -7,12 +7,7 @@ import IQueryUserModel from "src/interfaces/User/IQueryUserModel";
 import { useAppSelector, useAppDispatch } from "src/hooks/redux";
 import ISelectOption from "src/interfaces/ISelectOption";
 import { FilterUserTypeOptions } from "src/constants/selectOptions";
-import {
-  ACCSENDING,
-  DECSENDING,
-  DEFAULT_USER_SORT_COLUMN_NAME,
-  DEFAULT_PAGE_LIMIT,
-} from "src/constants/paging";
+
 
 const ListUser = () => {
   const dispatch = useAppDispatch();
@@ -61,8 +56,8 @@ const ListUser = () => {
           </div>
 
           <div className="d-flex align-items-center ml-3">
-            <Link to="/brand/create" type="button" className="btn btn-danger">
-              Create new Brand
+            <Link to="/user/create" type="button" className="btn btn-danger">
+              Create new user
             </Link>
           </div>
         </div>     

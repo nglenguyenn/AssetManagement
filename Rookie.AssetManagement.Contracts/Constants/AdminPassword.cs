@@ -1,4 +1,4 @@
-﻿namespace Rookie.AssetManagement.DataAccessor.Entities
+﻿namespace Rookie.AssetManagement.Contracts.Constants
 {
     public static class AdminPassword
     {
