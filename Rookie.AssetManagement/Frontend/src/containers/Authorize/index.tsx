@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
-import { HOME } from "../../constants/pages";
+import { HOME, FIRST_TIME_CHANGE_PASSWORD } from "../../constants/pages";
 import HeaderLogIn from "../Layout/HeaderLogIn";
 import TextField from "src/components/FormInputs/TextField";
 import ILoginModel from "src/interfaces/ILoginModel";
@@ -86,7 +86,9 @@ const Login = () => {
                     isrequired
                   />
 
-                  {error && <div className="invalid">{error}</div>}
+                  {(
+                    <div className="invalid">{error}</div>
+                  )}
 
                   <div className="text-center mt-5">
                     <button

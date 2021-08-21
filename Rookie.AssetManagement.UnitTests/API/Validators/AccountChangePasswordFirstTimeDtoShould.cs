@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
+﻿using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
 using Rookie.AssetManagement.Tests.Validations;
 using Rookie.AssetManagement.UnitTests.API.Validators.TestData;
 using Rookie.AssetManagement.Validators;
@@ -11,7 +6,7 @@ using Xunit;
 
 namespace Rookie.AssetManagement.UnitTests.API.Validators
 {
-    public class AccountChangePasswordFirstTimeDtoShould : BaseValidatorShould    
+    public class AccountChangePasswordFirstTimeDtoShould : BaseValidatorShould
     {
         private readonly ValidationTestRunner<AccountChangePasswordFirstTimeDtoValidator, AccountChangePasswordFirstTimeDto> _testRunner;
 

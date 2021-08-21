@@ -39,7 +39,7 @@ namespace Rookie.AssetManagement.Business
             return await _dbContext.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetByAsync( Expression<Func<T, bool>> filter = null, string includeProperties = "")
+        public async Task<T> GetByAsync(Expression<Func<T, bool>> filter = null, string includeProperties = "")
         {
             IQueryable<T> query = _dbContext.Set<T>();
 

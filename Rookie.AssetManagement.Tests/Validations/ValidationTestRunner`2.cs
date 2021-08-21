@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Rookie.AssetManagement.Validators;
+﻿using Rookie.AssetManagement.Validators;
 using System;
 
 namespace Rookie.AssetManagement.Tests.Validations

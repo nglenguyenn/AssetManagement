@@ -37,10 +37,10 @@ export function* handleLogin(action: PayloadAction<ILoginModel>) {
 export function* handleGetMe() {
   try {
     const { data } = yield call(getMeRequest);
-    if (data.username) {
+    if (data.userName) {
       yield put(setAccount(data));
     }
-  } catch (error) {}
+  } catch (error) { }
 }
 
 export function* handleChangePassword(action: PayloadAction<IChangePassword>) {
@@ -85,3 +85,5 @@ export function* handleFirstTimeChangePassword(
     );
   }
 }
+
+

@@ -2,7 +2,7 @@ export default interface IAccount {
     status: string;
     id: number;
     token?: string;
-    username: string;
+    userName: string;
     role: string;
     fullName: string;
     staffCode: string;

@@ -1,9 +1,10 @@
 export default interface IUserForm {
-    userId? : number,
+    id?: number,
     firstName: string,
     lastName: string,
     dateOfBirth?: Date,
     gender: string,
     joinedDate?: Date,
     type: string,
+    timeOffset?: number
 }

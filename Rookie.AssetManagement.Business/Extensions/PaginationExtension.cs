@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Rookie.AssetManagement.Contracts;
+using Rookie.AssetManagement.Contracts.Constants;
+using Rookie.AssetManagement.Contracts.EnumDtos;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace Rookie.AssetManagement.Business
 {
@@ -11,30 +14,35 @@ namespace Rookie.AssetManagement.Business
     {
         public static async Task<PagedModel<TModel>> PaginateAsync<TModel>(
             this IQueryable<TModel> query,
-            int page,
-            int limit,
+            BaseQueryCriteria criteriaDto,
             CancellationToken cancellationToken)
             where TModel : class
         {
 
             var paged = new PagedModel<TModel>();
 
-            page = (page < 0) ? 1 : page;
+            paged.CurrentPage = (criteriaDto.Page < 0) ? 1 : criteriaDto.Page;
+            paged.PageSize = criteriaDto.Limit;
 
-            paged.CurrentPage = page;
-            paged.PageSize = limit;
+            if (!string.IsNullOrEmpty(criteriaDto.SortOrder.ToString()) &&
+                !string.IsNullOrEmpty(criteriaDto.SortColumn))
+            {
+                var sortOrder = criteriaDto.SortOrder == (int)SortOrderEnumDto.Accsending ?
+                                    PagingSortingConstants.ASC :
+                                    PagingSortingConstants.DESC;
+                var orderString = $"{criteriaDto.SortColumn} {sortOrder}";
+                query = query.OrderBy(orderString);
+            }
 
-            // var totalItemsCountTask = await query.CountAsync(cancellationToken);
-
-            var startRow = (page - 1) * limit;
+            var startRow = (paged.CurrentPage - 1) * paged.PageSize;
 
             paged.Items = await query
                         .Skip(startRow)
-                        .Take(limit)
+                        .Take(paged.PageSize)
                         .ToListAsync(cancellationToken);
 
             paged.TotalItems = await query.CountAsync(cancellationToken);
-            paged.TotalPages = (int)Math.Ceiling(paged.TotalItems / (double)limit);
+            paged.TotalPages = (int)Math.Ceiling(paged.TotalItems / (double)paged.PageSize);
 
             return paged;
         }

@@ -9,7 +9,6 @@ class RequestService {
     public axios: AxiosInstance;
 
     constructor() {
-        console.log(config.baseURL);
         this.axios = axios.create(config);
         //this.axios.defaults.headers.common['Content-Type'] = `application/json`;
     }

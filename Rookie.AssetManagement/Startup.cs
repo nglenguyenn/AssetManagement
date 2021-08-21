@@ -1,20 +1,20 @@
-using Rookie.AssetManagement.Extensions.ServiceCollection;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Rookie.AssetManagement.Middlewares;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Rookie.AssetManagement.Business;
 using Rookie.AssetManagement.DataAccessor;
-using FluentValidation.AspNetCore;
-using System.Reflection;
-using Rookie.AssetManagement.DataAccessor.Entities;
-using Microsoft.AspNetCore.Identity;
 using Rookie.AssetManagement.DataAccessor.Data.Seeds;
+using Rookie.AssetManagement.DataAccessor.Entities;
+using Rookie.AssetManagement.Extensions.ServiceCollection;
+using Rookie.AssetManagement.Middlewares;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Rookie.AssetManagement
 {

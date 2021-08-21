@@ -4,11 +4,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import ConfirmModal from "src/components/ConfirmModal";
 import ChangePasswordModal from "../ChangePassword";
 import { HOME } from "src/constants/pages";
-
 import { useAppDispatch, useAppSelector } from "src/hooks/redux";
 import { cleanUp, logout } from "../Authorize/reducer";
-import { handleChangePassword } from "../Authorize/sagas/handles";
-import { Status } from "src/constants/status";
 
 // eslint-disable-next-line react/display-name
 const CustomToggle = React.forwardRef<any, any>(({ children, onClick }, ref): any => (
@@ -30,7 +27,7 @@ const Header = () => {
   const { account, status } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
 
-  const [showModalChangePasswod, setShowModalChangePasswod] = useState(false);
+  const [showModalChangePasswod, setShowModalChangePassword] = useState(false);
   const [showConfirmLogout, setShowConfirmLogout] = useState(false);
   const [isChangePasswordSuccess, setIsChangePasswordSuccess] = useState(false);
 
@@ -41,12 +38,12 @@ const Header = () => {
   }
 
   const openModal = () => {
-    setShowModalChangePasswod(true);
+    setShowModalChangePassword(true);
   };
 
   const handleHide = () => {
     dispatch(cleanUp());
-    setShowModalChangePasswod(false);
+    setShowModalChangePassword(false);
     setIsChangePasswordSuccess(false);
   }
 
@@ -54,7 +51,7 @@ const Header = () => {
     setShowConfirmLogout(true);
   };
 
-  const handleCancleLogout = () => {
+  const handleCancelLogout = () => {
     setShowConfirmLogout(false);
   };
 
@@ -76,7 +73,7 @@ const Header = () => {
           <div className='ml-auto text-white'>
             <Dropdown>
               <Dropdown.Toggle as={CustomToggle}>
-                {account?.username}
+                {account?.userName}
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
@@ -91,13 +88,13 @@ const Header = () => {
       <ConfirmModal
         title="Are you sure?"
         isShow={showConfirmLogout}
-        onHide={handleCancleLogout}
+        onHide={handleCancelLogout}
       >
         <div>
           <div className="text-center">Do you want to log out?</div>
           <div className="text-center mt-3">
             <button className="btn btn-danger mr-3" onClick={handleConfirmedLogout} type="button">Log out</button>
-            <button className="btn btn-outline-secondary" onClick={handleCancleLogout} type="button">Cancel</button>
+            <button className="btn btn-outline-secondary" onClick={handleCancelLogout} type="button">Cancel</button>
           </div>
         </div>
       </ConfirmModal>

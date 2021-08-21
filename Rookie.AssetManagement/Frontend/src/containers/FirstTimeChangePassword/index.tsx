@@ -5,13 +5,11 @@ import * as Yup from "yup";
 
 import IFirstTimeChangePassword from "../../interfaces/IFirstTimeChangePassword";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import ModalHeader from "react-bootstrap/esm/ModalHeader";
+
 import PasswordField from "../../components/FormInputs/PasswordField";
 import { firstTimeChangePassword } from "../Authorize/reducer";
 import { useHistory } from "react-router-dom";
-import { HOME } from "../../constants/pages";
 
-const Home = lazy(() => import("src/containers/Home"));
 
 const initialValues: IFirstTimeChangePassword = {
   newPassword: "",
@@ -62,7 +60,7 @@ const FirstTimeChangePassword = () => {
               validationSchema={validationSchema}
               onSubmit={(values) => handleFirstTimeChangePassword(values)}
             >
-              {(action) => (
+              {(actions) => (
                 <Form>
                   This is the first time you logged in you have to change your
                   password to continue
@@ -78,7 +76,7 @@ const FirstTimeChangePassword = () => {
                     <button
                       className="btn btn-danger mr-3"
                       type="submit"
-                      disabled={loading}
+                      disabled={!(actions.isValid && actions.dirty)}
                     >
                       Save
                       {loading && (

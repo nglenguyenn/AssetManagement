@@ -2,7 +2,7 @@ export default interface IUser {
     id: number,
     userName: string,
     staffCode: string,
-    roleType: string;
+    type: string;
     firstName: string,
     lastName: string,
     fullName: string,

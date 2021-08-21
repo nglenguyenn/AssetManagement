@@ -3,6 +3,7 @@ import { useField } from 'formik';
 import { CalendarDateFill } from "react-bootstrap-icons";
 import DatePicker from 'react-datepicker';
 
+
 type DateFieldProps = InputHTMLAttributes<HTMLInputElement> & {
     label: string;
     placeholder?: string;
@@ -15,7 +16,7 @@ type DateFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 const DateField: React.FC<DateFieldProps> = (props) => {
-    const [{ value }, { error, touched }, { setValue }] = useField(props);
+    const [field, { error, touched, value }, { setValue, setTouched }] = useField(props);
     const {
         label, isrequired, notvalidate, maxDate, minDate, filterDate,
     } = props;
@@ -23,8 +24,12 @@ const DateField: React.FC<DateFieldProps> = (props) => {
     const validateClass = () => {
         if (touched && error) return 'is-invalid';
         if (notvalidate) return '';
-        if (touched) return 'is-valid';
-
+        if (isrequired) {
+            if (value != null) 
+                return 'is-valid';
+        } else {
+            if (touched) return 'is-valid';
+        }
         return '';
     };
 
@@ -44,22 +49,29 @@ const DateField: React.FC<DateFieldProps> = (props) => {
                 <div className="col">
                     <div className="d-flex align-items-center w-100">
                         <DatePicker
-                            placeholderText={label}
-                            className='border w-100 text-center is-invalid'
+                            placeholderText="MM/dd/yyyy"
+                            className={`w-100 text-center form-control ${validateClass()}`}
                             dateFormat='MM/dd/yyyy'
-                            selected={value}
+                            selected={(field.value && new Date(field.value)) || null}
                             onChange={date => handleChangeAssignedDate(date as Date)}
                             isClearable
                             showDisabledMonthNavigation
+                            showMonthDropdown
+                            showYearDropdown
                             maxDate={maxDate}
                             minDate={minDate}
                             filterDate={filterDate}
+                            onClickOutside={e => {setTouched(true, true)}}
+                            onChangeRaw={e => {setTouched(true, true)}}
                         />
 
                         <div className="border p-2">
                             <CalendarDateFill />
                         </div>
                     </div>
+                    {error && (
+                        <div className='invalid'>{error}</div>
+                    )}
                 </div>
             </div>
         </>

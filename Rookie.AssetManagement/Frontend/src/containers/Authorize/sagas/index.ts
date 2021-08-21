@@ -8,5 +8,4 @@ export default function* authorizeSagas() {
     yield takeLatest(me.type, handleGetMe),
     yield takeLatest(changePassword.type, handleChangePassword)
     yield takeLatest(firstTimeChangePassword.type, handleFirstTimeChangePassword)
-
 }

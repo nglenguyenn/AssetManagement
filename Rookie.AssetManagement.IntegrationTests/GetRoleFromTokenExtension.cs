@@ -1,11 +1,7 @@
 ﻿using Rookie.AssetManagement.Contracts.Constants;
 using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rookie.AssetManagement.IntegrationTests
 {

@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import IChangepassWord from "../../interfaces/IChangePassword";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import PasswordField from "src/components/FormInputs/PasswordField";
-import { changePassword } from "../Authorize/reducer";
+import { changePassword, cleanUp } from "../Authorize/reducer";
 import { useHistory } from "react-router-dom";
 import { Status } from "src/constants/status";
 
@@ -16,7 +16,10 @@ const initialValues: IChangepassWord = {
 
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().trim().required("Required"),
-  newPassword: Yup.string().trim().required("Required").min(5, "New password must be at least 5 characters")
+  newPassword: Yup.string()
+    .trim()
+    .required("Required")
+    .min(5, "New password must be at least 5 characters"),
 });
 
 type Props = {
@@ -41,18 +44,20 @@ const ChangePasswordModal: React.FC<Props> = ({
   );
 
   const handleChangePassword = (values) => {
-    console.log(values);
+    setIstouch(true);
     dispatch(changePassword(values));
   };
 
   const [success, setSuccess] = useState(false);
+
+  const [isTouched, setIstouch] = useState(false);
 
   const handelCancel = () => {
     hide();
   };
 
   useEffect(() => {
-    if (status === Status.Success) {
+    if (status === Status.Success && isTouched) {
       setSuccess(true);
     } else {
       setSuccess(false);
@@ -72,7 +77,6 @@ const ChangePasswordModal: React.FC<Props> = ({
       </Modal.Header>
 
       <Modal.Body>
-        {console.log(status)}
         {success ? (
           <>
             <div className="text-center">
@@ -96,14 +100,8 @@ const ChangePasswordModal: React.FC<Props> = ({
           >
             {(actions) => (
               <Form>
-                <PasswordField
-                  name="oldPassword"
-                  label="Old Password"
-                />
-                <PasswordField
-                  name="newPassword"
-                  label="New Password"
-                />
+                <PasswordField name="oldPassword" label="Old Password" />
+                <PasswordField name="newPassword" label="New Password" />
 
                 {error && <div className="invalid">{error}</div>}
 
@@ -132,5 +130,4 @@ const ChangePasswordModal: React.FC<Props> = ({
     </Modal>
   );
 };
-
 export default ChangePasswordModal;

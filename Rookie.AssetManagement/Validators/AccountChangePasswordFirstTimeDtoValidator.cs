@@ -1,6 +1,6 @@
-﻿using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
-using FluentValidation;
+﻿using FluentValidation;
 using Rookie.AssetManagement.Contracts.Constants;
+using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
 
 namespace Rookie.AssetManagement.Validators
 {

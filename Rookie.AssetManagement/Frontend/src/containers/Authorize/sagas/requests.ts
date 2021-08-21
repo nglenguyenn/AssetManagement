@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-
 import RequestService from 'src/services/request';
 import EndPoints from 'src/constants/endpoints';
 import IAccountRole from "src/interfaces/IAccountRole";
@@ -9,13 +8,10 @@ import IChangePassword from "src/interfaces/IChangePassword";
 import IFirstTimeChangePassword from "src/interfaces/IFirstTimeChangePassword";
 
 export function loginRequest(login: ILoginModel): Promise<AxiosResponse<IAccount>> {
-    const something = RequestService.axios.post(EndPoints.login, login) ; 
-    console.log(something) ;
     return RequestService.axios.post(EndPoints.login, login);
 }
 
 export function getMeRequest(): Promise<AxiosResponse<IAccount>> {
-    console.log("get me request") ;
     return RequestService.axios.get(EndPoints.me);
 }
 

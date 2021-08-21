@@ -1,11 +1,7 @@
 ﻿using Rookie.AssetManagement.Contracts.Constants;
 using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
 {
@@ -24,10 +20,10 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
         {
             return new object[][]
             {
-                new object[] 
-                { 
+                new object[]
+                {
                     null,
-                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountLoginDto.Username)),
+                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountLoginDto.UserName)),
                 }
             };
         }
@@ -75,6 +71,30 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
                 };
             var claimsIdentity = new ClaimsIdentity(authClaims);
             return claimsIdentity;
+        }
+
+        public static IEnumerable<object[]> InValidNewPasswordChange()
+        {
+            return new object[][]
+            {
+                new object[]
+                {
+                    null,
+                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountChangePasswordDto.NewPassword)),
+                }
+            };
+        }
+
+        public static IEnumerable<object[]> InValidOldPassword()
+        {
+            return new object[][]
+            {
+                new object[]
+                {
+                    null,
+                    string.Format(ErrorTypes.Common.RequiredError, nameof(AccountChangePasswordDto.OldPassword)),
+                }
+            };
         }
     }
 }

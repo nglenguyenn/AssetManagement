@@ -1,7 +1,8 @@
-﻿using Rookie.AssetManagement.DataAccessor.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Rookie.AssetManagement.DataAccessor.Data.Seeds;
+using Rookie.AssetManagement.DataAccessor.Entities;
 
 namespace Rookie.AssetManagement.DataAccessor.Data
 {
@@ -12,8 +13,13 @@ namespace Rookie.AssetManagement.DataAccessor.Data
         {
         }
 
+        public virtual DbSet<Asset> Assets { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.SeedCategoryData();
+
             base.OnModelCreating(builder);
 
             builder.Entity<User>(entity =>

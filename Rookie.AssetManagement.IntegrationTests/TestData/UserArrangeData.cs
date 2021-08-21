@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Identity;
+using Rookie.AssetManagement.Constants;
+using Rookie.AssetManagement.Contracts.Enums;
+using Rookie.AssetManagement.DataAccessor.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Rookie.AssetManagement.Constants;
 using Rookie.AssetManagement.DataAccessor.Data;
-using Rookie.AssetManagement.DataAccessor.Entities;
+using Rookie.AssetManagement.Contracts.Dtos.UserDtos;
+using Rookie.AssetManagement.Contracts.Constants;
+using Rookie.AssetManagement.Contracts.EnumDtos;
+using System.Threading;
 
 namespace Rookie.AssetManagement.IntegrationTests.TestData
 {
@@ -18,6 +23,7 @@ namespace Rookie.AssetManagement.IntegrationTests.TestData
                 {
                     new User
                     {
+                        Id = 1,
                         UserName = "adminhcm",
                         StaffCode = "SD0000",
                         JoinedDate = DateTime.Now,
@@ -29,6 +35,7 @@ namespace Rookie.AssetManagement.IntegrationTests.TestData
                     },
                     new User
                     {
+                        Id = 2,
                         UserName = "adminhn",
                         StaffCode = "SD0001",
                         JoinedDate = DateTime.Now,
@@ -53,6 +60,7 @@ namespace Rookie.AssetManagement.IntegrationTests.TestData
                 {
                     new User
                     {
+                        Id = 3,
                         UserName = "stafftest1",
                         StaffCode = "SD0000",
                         JoinedDate = DateTime.Now,
@@ -64,6 +72,7 @@ namespace Rookie.AssetManagement.IntegrationTests.TestData
                     },
                     new User
                     {
+                        Id = 4,
                         UserName = "stafftest2",
                         StaffCode = "SD0001",
                         JoinedDate = DateTime.Now,
@@ -102,6 +111,31 @@ namespace Rookie.AssetManagement.IntegrationTests.TestData
             {
                 userManager.AddToRoleAsync(user, Roles.Staff).Wait();
             }
+        }
+
+        public static UserCreateDto GetUserCreateDto()
+        {
+            return new UserCreateDto()
+            {
+                FirstName = "Anh",
+                LastName = "Tran Tien",
+                DateOfBirth = new DateTime(1996, 1, 1),
+                Gender = true,
+                JoinedDate = new DateTime(2015, 1, 1),
+                Type = UserConstants.Common.StaffRole
+            };
+        }
+
+        public static UserQueryCriteriaDto GetUserQueryCriterDto()
+        {
+            return new UserQueryCriteriaDto()
+            {
+                Limit = 5,
+                Location = Location.HCM,
+                Page = 1,
+                SortColumn = "Id",
+                SortOrder = SortOrderEnumDto.Decsending
+            };
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Rookie.AssetManagement.Validators
 	{
         public AccountLoginDtoValidator()
         {
-            RuleFor(m => m.Username)
+            RuleFor(m => m.UserName)
                 .NotNull()
-                .WithMessage(x => string.Format(ErrorTypes.Common.RequiredError, nameof(x.Username)));
+                .WithMessage(x => string.Format(ErrorTypes.Common.RequiredError, nameof(x.UserName)));
 
             RuleFor(m => m.Password)
                 .NotNull()

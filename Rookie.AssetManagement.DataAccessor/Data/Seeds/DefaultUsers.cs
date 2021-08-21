@@ -1,10 +1,11 @@
-using System;
-using System.Threading.Tasks;
-using Rookie.AssetManagement.Constants;
 using Microsoft.AspNetCore.Identity;
+using Rookie.AssetManagement.Constants;
+using Rookie.AssetManagement.Contracts.Constants;
+using Rookie.AssetManagement.Contracts.Enums;
 using Rookie.AssetManagement.DataAccessor.Entities;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Rookie.AssetManagement.DataAccessor.Data.Seeds
 {
@@ -12,7 +13,7 @@ namespace Rookie.AssetManagement.DataAccessor.Data.Seeds
     {
         public static async Task SeedAsync(UserManager<User> userManager)
         {
-            if (userManager.FindByNameAsync("adminhn").Result == null ||userManager.FindByNameAsync("adminhcm").Result == null)
+            if (userManager.FindByNameAsync("adminhn").Result == null || userManager.FindByNameAsync("adminhcm").Result == null)
             {
                 var adminList = new List<User>()
                 {
@@ -40,9 +41,9 @@ namespace Rookie.AssetManagement.DataAccessor.Data.Seeds
                     },
                 };
 
-                foreach(User user in adminList)
+                foreach (User user in adminList)
                 {
-                    await AddAdminUser(userManager, user); 
+                    await AddAdminUser(userManager, user);
                 }
 
             }
@@ -128,11 +129,11 @@ namespace Rookie.AssetManagement.DataAccessor.Data.Seeds
             }
         }
 
-        public static async Task AddAdminUser (UserManager<User> userManager, User user)
+        public static async Task AddAdminUser(UserManager<User> userManager, User user)
         {
             string adminPassword = "";
 
-            switch(user.Location)
+            switch (user.Location)
             {
                 case Location.HCM:
                     adminPassword = AdminPassword.AdminHCM;
@@ -141,7 +142,7 @@ namespace Rookie.AssetManagement.DataAccessor.Data.Seeds
                     adminPassword = AdminPassword.AdminHN;
                     break;
                 default:
-                    return; 
+                    return;
             }
 
 

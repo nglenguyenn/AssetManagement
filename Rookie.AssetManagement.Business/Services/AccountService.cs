@@ -1,44 +1,39 @@
-﻿using AutoMapper.Configuration;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Rookie.AssetManagement.Business.Interfaces;
+using Rookie.AssetManagement.Contracts.Constants;
 using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
 using Rookie.AssetManagement.DataAccessor.Entities;
-using Rookie.AssetManagement.Contracts.Constants;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Rookie.AssetManagement.Business.Services
 {
-	public class AccountService : ControllerBase, IAccountService
-	{
-        private readonly UserManager<User> userManager;
+    public class AccountService : ControllerBase, IAccountService
+    {
+        private readonly UserManager<User> _userManager;
         private readonly IBaseRepository<User> _userRepository;
 
         public AccountService(UserManager<User> userManager, IBaseRepository<User> userRepository)
         {
-            this.userManager = userManager;
+            this._userManager = userManager;
             _userRepository = userRepository;
         }
-        public async Task<IActionResult> Login([FromBody] AccountLoginDto accountLoginDto)
-		{
-            var user = await userManager.FindByNameAsync(accountLoginDto.Username);
-            if (user != null && await userManager.CheckPasswordAsync(user, accountLoginDto.Password))
+        public async Task<IActionResult> LoginAsync([FromBody] AccountLoginDto accountLoginDto)
+        {
+            var user = await _userManager.FindByNameAsync(accountLoginDto.UserName);
+            if (user != null && await _userManager.CheckPasswordAsync(user, accountLoginDto.Password))
             {
 
                 if (user.IsDisabled) return Unauthorized("Your account is disabled. Please contact with IT Team");
 
 
-                var userRoles = await userManager.GetRolesAsync(user);
+                var userRoles = await _userManager.GetRolesAsync(user);
 
                 var authClaims = new List<Claim>
                 {
@@ -76,9 +71,9 @@ namespace Rookie.AssetManagement.Business.Services
                     Status = message,
                     Id = user.Id,
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
-                    Username = user.UserName,
+                    UserName = user.UserName,
                     Role = userRoles?[0],
-                    Fullname = $"{user.FirstName} {user.LastName}",
+                    FullName = $"{user.FirstName} {user.LastName}",
                     StaffCode = user.StaffCode,
                     Location = user.Location.ToString(),
                 });
@@ -87,30 +82,18 @@ namespace Rookie.AssetManagement.Business.Services
             return Unauthorized("Username or password is incorrect. Please try again");
         }
 
-        public async Task<IActionResult> getAccountRoleAsync(ClaimsIdentity identity)
-        {
-            var id = identity.FindFirst(UserClaims.Id)?.Value;
-            if (id == null) return Unauthorized();
-
-            var user = await userManager.FindByIdAsync(id);
-            if (user.IsDisabled) return Unauthorized();
-
-            var userRoles = await userManager.GetRolesAsync(user);
-            return Ok(new { userRoles });
-        }
-
-        public async Task<IActionResult> ChangePasswordFirstTime(ClaimsIdentity identity, [FromBody] AccountChangePasswordFirstTimeDto accountChangePassFirstTimeDto)
+        public async Task<IActionResult> ChangePasswordFirstTimeAsync(ClaimsIdentity identity, [FromBody] AccountChangePasswordFirstTimeDto accountChangePassFirstTimeDto)
         {
 
             var id = identity.FindFirst(UserClaims.Id).Value;
 
-            var user = await userManager.FindByIdAsync(id);
-            
+            var user = await _userManager.FindByIdAsync(id);
+
             if (user.IsFirstChangePassword == false)
             {
-                var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                var result = await userManager.ResetPasswordAsync(user, token, accountChangePassFirstTimeDto.NewPassword);
+                var result = await _userManager.ResetPasswordAsync(user, token, accountChangePassFirstTimeDto.NewPassword);
 
                 user.IsFirstChangePassword = true;
 
@@ -121,23 +104,23 @@ namespace Rookie.AssetManagement.Business.Services
             else return BadRequest("Password Already Changed Once");
         }
 
-        public async Task<IActionResult> CheckIfPasswordChanged(ClaimsIdentity identity)
+        public async Task<IActionResult> CheckIfPasswordChangedAsync(ClaimsIdentity identity)
         {
             var id = identity.FindFirst(UserClaims.Id).Value;
 
-            var user = await userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
             return Ok(user.IsFirstChangePassword);
         }
 
-        public async Task<IActionResult> ChangePassword(ClaimsIdentity identity, [FromBody] AccountChangePasswordDto accountChangePasswordDto)
+        public async Task<IActionResult> ChangePasswordAsync(ClaimsIdentity identity, [FromBody] AccountChangePasswordDto accountChangePasswordDto)
         {
             var id = identity.FindFirst(UserClaims.Id).Value;
-            var user = await userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
 
-            if (await userManager.CheckPasswordAsync(user, accountChangePasswordDto.OldPassword))
+            if (await _userManager.CheckPasswordAsync(user, accountChangePasswordDto.OldPassword))
             {
-                var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                var result = await userManager.ResetPasswordAsync(user, token, accountChangePasswordDto.NewPassword);
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ResetPasswordAsync(user, token, accountChangePasswordDto.NewPassword);
                 if (result.Succeeded)
                     return Ok();
                 else
@@ -145,20 +128,22 @@ namespace Rookie.AssetManagement.Business.Services
             }
             return Conflict("Password is incorrect");
         }
+
+
         public async Task<IActionResult> GetAccountAsync(ClaimsIdentity identity, string token)
-		{
+        {
             var id = identity.FindFirst(UserClaims.Id)?.Value;
-            if (id == null) 
+            if (id == null)
                 return Unauthorized("Token not found");
 
-            var user = await userManager.FindByIdAsync(id);
-            if (user == null) 
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
                 return Unauthorized("User not found");
 
-            if (user.IsDisabled) 
+            if (user.IsDisabled)
                 return Unauthorized("Your account is disabled. Please contact with IT Team");
 
-            var userRoles = await userManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             var tokenElement = token.Split(' ');
 
@@ -171,7 +156,7 @@ namespace Rookie.AssetManagement.Business.Services
 
             string message = null;
             if (!user.IsFirstChangePassword)
-			{
+            {
                 message = "NeedChangePassword";
             }
             else message = "Success";
@@ -181,9 +166,9 @@ namespace Rookie.AssetManagement.Business.Services
                 Status = message,
                 Id = user.Id,
                 Token = token,
-                Username = user.UserName,
+                UserName = user.UserName,
                 Role = userRoles?[0],
-                Fullname = $"{user.FirstName} {user.LastName}",
+                FullName = $"{user.FirstName} {user.LastName}",
                 StaffCode = user.StaffCode,
                 Location = user.Location.ToString(),
             });

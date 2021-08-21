@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-
-import { useAppSelector } from "src/hooks/redux";
+import React from "react";
 
 const Home = () => {
+
   return (
     <>
       <div className='primaryColor text-title intro-x'>

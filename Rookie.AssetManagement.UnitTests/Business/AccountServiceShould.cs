@@ -1,31 +1,22 @@
 using AutoMapper;
-using FluentAssertions;
-using MockQueryable.Moq;
-using Moq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Rookie.AssetManagement.Business;
-using Rookie.AssetManagement.Business.Interfaces;
 using Rookie.AssetManagement.Business.Services;
-using Rookie.AssetManagement.Contracts;
+using Rookie.AssetManagement.Contracts.Constants;
+using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
 using Rookie.AssetManagement.DataAccessor.Data;
 using Rookie.AssetManagement.DataAccessor.Entities;
 using Rookie.AssetManagement.IntegrationTests.Common;
-using Microsoft.AspNetCore.Identity;
+using Rookie.AssetManagement.IntegrationTests.TestData;
 using Rookie.AssetManagement.UnitTests.API.Validators.TestData;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging;
-using Rookie.AssetManagement.IntegrationTests.TestData;
-using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Rookie.AssetManagement.Contracts.Constants;
 
 namespace Rookie.AssetManagement.UnitTests.Business
 {
-        public class AccountServiceShould : IClassFixture<SqliteInMemoryFixture>
+    public class AccountServiceShould : IClassFixture<SqliteInMemoryFixture>
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly AccountService _accountService;
@@ -37,7 +28,7 @@ namespace Rookie.AssetManagement.UnitTests.Business
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
             _mapper = config.CreateMapper();
-            
+
 
             fixture.CreateDatabase();
             _dbContext = fixture.Context;
@@ -51,18 +42,18 @@ namespace Rookie.AssetManagement.UnitTests.Business
             UserArrangeData.InitUsersDataAsync(_userManager).Wait();
         }
 
-        [Fact]        
+        [Fact]
         public async Task ValidLoginShouldBeSuccess()
         {
             //Arrange
             var loginAccount = new AccountLoginDto()
             {
-                Username = "adminhcm",
+                UserName = "adminhcm",
                 Password = "123456"
             };
-            
+
             //Act
-            var result = await _accountService.Login(loginAccount);
+            var result = await _accountService.LoginAsync(loginAccount);
             var okResult = result as ObjectResult;
             //Assert
             Assert.NotNull(result);
@@ -75,28 +66,16 @@ namespace Rookie.AssetManagement.UnitTests.Business
             //Arrange
             var loginAccount = new AccountLoginDto()
             {
-                Username = "falseName",
+                UserName = "falseName",
                 Password = "falsePassword"
             };
 
             //Act
-            var result = await _accountService.Login(loginAccount);
-            var invalidLoginResult = result as ObjectResult; 
+            var result = await _accountService.LoginAsync(loginAccount);
+            var invalidLoginResult = result as ObjectResult;
             //Assert
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status401Unauthorized, invalidLoginResult.StatusCode);
-        }
-        [Fact]
-        public async Task GetAccountRoleShouldBeSuccess()
-        {
-            //Arrange
-            var claimsidentity = AccountTestData.GetClaims();
-
-            //Act
-            var result = await _accountService.getAccountRoleAsync(claimsidentity);
-            //Assert
-            Assert.NotNull(result);
-            
         }
         [Fact]
         public async Task ChangePasswordFirstTimeShouldBeSuccess()
@@ -105,10 +84,10 @@ namespace Rookie.AssetManagement.UnitTests.Business
             var claimsidentity = AccountTestData.GetClaims();
             var changePassDto = new AccountChangePasswordFirstTimeDto { NewPassword = "123456" };
             //Act
-            var result = await _accountService.ChangePasswordFirstTime(claimsidentity,changePassDto);
+            var result = await _accountService.ChangePasswordFirstTimeAsync(claimsidentity, changePassDto);
             var objResult = result as ObjectResult;
             var user = _userManager.FindByIdAsync(claimsidentity.FindFirst(UserClaims.Id).Value);
-            
+
             //Assert
             Assert.NotNull(result);
             Assert.Contains("Password Changed Successfully", objResult.Value.ToString());
@@ -120,14 +99,34 @@ namespace Rookie.AssetManagement.UnitTests.Business
         {
             //Arrange
             var claimsidentity = AccountTestData.GetClaims();
-            
+
             //Act
-            var result = await _accountService.CheckIfPasswordChanged(claimsidentity);
+            var result = await _accountService.CheckIfPasswordChangedAsync(claimsidentity);
             var okResult = result as ObjectResult;
             //Assert
             Assert.NotNull(result);
             Assert.IsType<bool>(okResult.Value);
 
+        }
+
+        [Fact]
+        public async Task ChangePasswordShouldBeSuccess()
+        {
+            //Arrange
+            var claimsidentity = AccountTestData.GetClaims();
+
+            var changePassword = new AccountChangePasswordDto()
+            {
+                OldPassword = "123456",
+                NewPassword = "test12345"
+            };
+
+            //Act
+            var result = await _accountService.ChangePasswordAsync(claimsidentity, changePassword);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<OkResult>(result);
         }
     }
 }

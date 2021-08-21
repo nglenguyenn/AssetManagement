@@ -14,6 +14,8 @@ namespace Rookie.AssetManagement.Business
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAssetService, AssetService>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim(UserClaims.Role, Roles.Admin));

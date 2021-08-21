@@ -1,21 +1,30 @@
-export const HOME = '/';
+export const HOME = "/";
 
-export const LOGIN = '/login';
+export const LOGIN = "/login";
 
-export const NOTFOUND = '/notfound';
+export const NOTFOUND = "/notfound";
 
-export const USER = '/user';
+export const USER = "/user";
 
-export const ASSET = '/asset';
+export const USER_CREATE = '/user/create';
 
-export const ASSIGNMENT = '/assignment';
+export const USER_EDIT = '/user/edit';
 
-export const RETURN = '/return';
+export const USER_EDIT_ID = (id: string | number) => `/user/edit/${id}`;
 
-export const REPORT = '/report';
+export const ASSET = "/asset";
 
-export const CHANGEPASSWORD = '/changepassword'; 
+export const CREATE_ASSET = "/asset/create";
 
-export const FIRSTTIMECHANGEPASSWORD = '/firsttime';
+export const ASSIGNMENT = "/assignment";
 
-export const ERROR = '/error';
+export const RETURN = "/return";
+
+export const REPORT = "/report";
+
+export const CHANGE_PASSWORD = "/changepassword";
+
+export const FIRST_TIME_CHANGE_PASSWORD = "/firsttime";
+
+export const ERROR = "/error";
+

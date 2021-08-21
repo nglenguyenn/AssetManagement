@@ -149,6 +149,79 @@ namespace Rookie.AssetManagement.DataAccessor.Migrations
                     b.ToTable("UserTokens");
                 });
 
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Asset", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AssetCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AssetName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("InstalledDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Assets");
+                });
+
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CategoryCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryCode = "LA",
+                            Name = "Laptop"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryCode = "MO",
+                            Name = "Monitor"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryCode = "PC",
+                            Name = "Personal Computer"
+                        });
+                });
+
             modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -295,6 +368,22 @@ namespace Rookie.AssetManagement.DataAccessor.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Asset", b =>
+                {
+                    b.HasOne("Rookie.AssetManagement.DataAccessor.Entities.Category", "Category")
+                        .WithMany("Assets")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Category", b =>
+                {
+                    b.Navigation("Assets");
                 });
 #pragma warning restore 612, 618
         }

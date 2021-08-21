@@ -1,28 +1,19 @@
-﻿using AutoMapper;
-//using FluentAssertions;
-using Rookie.AssetManagement.Tests;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Rookie.AssetManagement.Business;
 using Rookie.AssetManagement.Business.Services;
+using Rookie.AssetManagement.Constants;
+using Rookie.AssetManagement.Contracts.Constants;
 using Rookie.AssetManagement.Contracts.Dtos.AccountDtos;
 using Rookie.AssetManagement.Controllers;
 using Rookie.AssetManagement.DataAccessor.Data;
 using Rookie.AssetManagement.DataAccessor.Entities;
 using Rookie.AssetManagement.IntegrationTests.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Rookie.AssetManagement.IntegrationTests.TestData;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
-using Microsoft.AspNetCore.Mvc;
-using Rookie.AssetManagement.IntegrationTests.TestData;
-using Rookie.AssetManagement.DataAccessor.Data.Seeds;
-using System.Security.Claims;
-using Rookie.AssetManagement.Constants;
-using Rookie.AssetManagement.Contracts.Constants;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Rookie.AssetManagement.IntegrationTests
 {
@@ -32,7 +23,6 @@ namespace Rookie.AssetManagement.IntegrationTests
         private readonly UserManager<User> _userManager;
         private readonly BaseRepository<User> _userRepository;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
-        //private readonly IMapper _mapper;
         private readonly AccountService _accountService;
         private readonly AccountController _accountController;
 
@@ -56,7 +46,7 @@ namespace Rookie.AssetManagement.IntegrationTests
             //Arrange
             var loginAccount = new AccountLoginDto()
             {
-                Username = username,
+                UserName = username,
                 Password = password
             };
 
@@ -83,7 +73,7 @@ namespace Rookie.AssetManagement.IntegrationTests
             //Arrange
             var loginAccount = new AccountLoginDto()
             {
-                Username = username,
+                UserName = username,
                 Password = password
             };
 
@@ -136,6 +126,38 @@ namespace Rookie.AssetManagement.IntegrationTests
             Assert.NotNull(okResult);
             Assert.True(okResult is OkObjectResult);
             Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("123456", "abc123")]
+        public async Task Change_Password_Success(string oldPassword, string newPassword)
+        {
+            //Arrange
+            var changePassword = new AccountChangePasswordDto()
+            {
+                OldPassword = oldPassword,
+                NewPassword = newPassword
+            };
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(UserClaims.Id, "1"),
+                new Claim(UserClaims.StaffCode, "SD0000"),
+                new Claim(UserClaims.FullName, "Tran Cuong"),
+                new Claim(UserClaims.Location, "HCM"),
+                new Claim(UserClaims.Role, "ADMIN")
+            }, "mock"));
+
+            _accountController.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            //Act
+            var result = await _accountController.ChangePassword(changePassword);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<OkResult>(result);
         }
     }
 }

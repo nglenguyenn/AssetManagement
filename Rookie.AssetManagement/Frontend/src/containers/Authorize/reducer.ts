@@ -33,7 +33,7 @@ const AuthSlice = createSlice({
     initialState,
     reducers: {
         setAccount: (state: AuthState, action: PayloadAction<IAccount>): AuthState => {
-            const account = action.payload;
+            const account: IAccount = action.payload;
             if (account?.token) {
                 setLocalStorage('token', account.token);
                 request.setAuthentication(account.token);
@@ -69,7 +69,6 @@ const AuthSlice = createSlice({
         },
         me: (state) => {
             if (token) {
-                console.log(token) ; 
                 request.setAuthentication(token);
             }
         },
