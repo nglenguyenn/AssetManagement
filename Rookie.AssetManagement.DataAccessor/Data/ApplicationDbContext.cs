@@ -15,6 +15,8 @@ namespace Rookie.AssetManagement.DataAccessor.Data
 
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Assignment> Assignments { get; set; }
+        public virtual DbSet<ReturnRequest> ReturnRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -56,6 +58,32 @@ namespace Rookie.AssetManagement.DataAccessor.Data
             {
                 entity.ToTable("UserTokens");
             });
+
+            builder.Entity<ReturnRequest>()
+                .HasOne(u => u.RequestedUser)
+                .WithMany(a => a.ReturnsRequest)
+                .HasForeignKey(u => u.RequestedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ReturnRequest>()
+                .HasOne(u => u.AcceptedUser)
+                .WithMany(a => a.ReturnsAccept)
+                .HasForeignKey(u => u.AcceptedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Assignment>()
+                 .HasOne(a => a.AssignBy)
+                 .WithMany(u => u.AssignmentsBy)
+                 .HasForeignKey(a => a.AssignById)
+                 .OnDelete(DeleteBehavior.Restrict)
+                 .IsRequired();
+
+            builder.Entity<Assignment>()
+                 .HasOne(a => a.AssignTo)
+                 .WithMany(u => u.AssignmentsTo)
+                 .HasForeignKey(a => a.AssignToId)
+                 .OnDelete(DeleteBehavior.Restrict)
+                 .IsRequired();
         }
     }
 }

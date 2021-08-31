@@ -12,10 +12,13 @@ import { ASSET } from "src/constants/pages";
 import {
   AssetCategoryOptions,
   AssetStateOptions,
-} from "src/constants/selectOptions";
+  AssetStatesForEdit
+} from "src/constants/assetOptions";
 import CheckboxField from "src/components/FormInputs/CheckboxField";
-import { cleanUp, createNewAsset } from "./reducer";
+import CheckboxStateField from "src/components/FormInputs/CheckboxStateField";
+import { cleanUp, createNewAsset, editAsset } from "./reducer";
 import { Status } from "src/constants/status";
+import { convertDate2 as changeDate } from "src/utils/formatDateTime";
 
 const initialFormValues: IAssetForm = {
   assetName: "",
@@ -45,10 +48,15 @@ const AssetFormContainer: React.FC<Props> = ({
   const { loading, status, error } = useAppSelector(
     (state) => state.assetReducer
   );
+  const isEdit = initialAssetForm.id ? true : false;
   const history = useHistory();
   const handleCreateNewAsset = (values) => {
     dispatch(createNewAsset(values));
   }
+
+  const handleEditAsset = (values) => {
+    dispatch(editAsset(values));
+  };
 
   useEffect(() => {
     if (status === Status.Success) {
@@ -57,30 +65,39 @@ const AssetFormContainer: React.FC<Props> = ({
     }
   }, [status, error])
 
+  const mapDate = () => {
+    if(isEdit) {
+      initialAssetForm = {...initialAssetForm, 
+        installedDate: new Date(changeDate(initialAssetForm.installedDate))};
+    }
+  }
+
+  mapDate();
+
   return (
     <Formik
       initialValues={initialAssetForm}
       enableReinitialize
       validationSchema={validationSchema}
-      onSubmit={(values) => {
-        //setLoading(false);
-        handleCreateNewAsset(values);
+      onSubmit={(values) => { (isEdit === false) ?
+        handleCreateNewAsset(values) : handleEditAsset(values);
       }}
     >
       {(actions) => (
         <Form className="intro-y col-lg-6 col-12">
-          <TextField name="assetName" label="AssetName" />
+          <TextField name="assetName" label="Asset Name" />
           <SelectField
             name="categoryId"
             label="Category"
             options={AssetCategoryOptions}
+            isDisabled={isEdit}
           />
           <TextAreaField name="specification" label="Specification" />
-          <DateField label="Installed date" name="installedDate" />
-          <CheckboxField
+          <DateField label="Installed Date" name="installedDate" />
+          <CheckboxStateField
             name="state"
             label="State"
-            options={AssetStateOptions}
+            options={(isEdit === false ) ? AssetStateOptions : AssetStatesForEdit }
           />
           <div className="d-flex">
             <div className="ml-auto">

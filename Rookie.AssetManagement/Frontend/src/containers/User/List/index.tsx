@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "src/hooks/redux";
 import IQueryUserModel from "src/interfaces/User/IQueryUserModel";
 import UserTable from "./UserTable";
 import { ACCSENDING, DECSENDING, DEFAULT_PAGE_LIMIT, DEFAULT_USER_SORT_COLUMN_NAME } from "src/constants/paging";
-import { getUsers, setShowCreatedRecord } from "../reducer";
+import { cleanUp, getUsers, setShowCreatedRecord } from "../reducer";
 import { FilterUserTypeOptions } from "src/constants/selectOptions";
 import { USER_CREATE } from "src/constants/pages";
 import ISelectOption from "src/interfaces/ISelectOption";
@@ -48,6 +48,7 @@ const ListUser = () => {
       dispatch(setShowCreatedRecord(undefined));
       setQuery({
         ...query,
+        page: 1,
         types: [],
       });
 
@@ -63,6 +64,7 @@ const ListUser = () => {
         dispatch(setShowCreatedRecord(undefined));
         setQuery({
           ...query,
+          page: 1,
           types: [],
         });
 
@@ -75,6 +77,7 @@ const ListUser = () => {
         dispatch(setShowCreatedRecord(undefined));
         setQuery({
           ...query,
+          page: 1,
           types: [],
         });
 
@@ -88,6 +91,7 @@ const ListUser = () => {
       dispatch(setShowCreatedRecord(undefined));
       setQuery({
         ...query,
+        page: 1,
         types,
       });
 
@@ -137,6 +141,7 @@ const ListUser = () => {
     dispatch(setShowCreatedRecord(undefined));
     setQuery({
       ...query,
+      page: 1,
       search,
     });
   };
@@ -148,6 +153,10 @@ const ListUser = () => {
 
   useEffect(() => {
     fetchData();
+
+    return () => {
+      dispatch(cleanUp());
+    }
   }, [query]);
 
   return (

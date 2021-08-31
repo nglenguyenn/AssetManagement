@@ -16,7 +16,7 @@ namespace Rookie.AssetManagement.DataAccessor.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -184,6 +184,42 @@ namespace Rookie.AssetManagement.DataAccessor.Migrations
                     b.ToTable("Assets");
                 });
 
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Assignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AssetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AssignById")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AssignToId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AssignedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetId");
+
+                    b.HasIndex("AssignById");
+
+                    b.HasIndex("AssignToId");
+
+                    b.ToTable("Assignments");
+                });
+
             modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -220,6 +256,40 @@ namespace Rookie.AssetManagement.DataAccessor.Migrations
                             CategoryCode = "PC",
                             Name = "Personal Computer"
                         });
+                });
+
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.ReturnRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AcceptedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AssignmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReturnedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcceptedByUserId");
+
+                    b.HasIndex("AssignmentId")
+                        .IsUnique();
+
+                    b.HasIndex("RequestedByUserId");
+
+                    b.ToTable("ReturnRequests");
                 });
 
             modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.User", b =>
@@ -381,9 +451,84 @@ namespace Rookie.AssetManagement.DataAccessor.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Assignment", b =>
+                {
+                    b.HasOne("Rookie.AssetManagement.DataAccessor.Entities.Asset", "Asset")
+                        .WithMany("Assignments")
+                        .HasForeignKey("AssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rookie.AssetManagement.DataAccessor.Entities.User", "AssignBy")
+                        .WithMany("AssignmentsBy")
+                        .HasForeignKey("AssignById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Rookie.AssetManagement.DataAccessor.Entities.User", "AssignTo")
+                        .WithMany("AssignmentsTo")
+                        .HasForeignKey("AssignToId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Asset");
+
+                    b.Navigation("AssignBy");
+
+                    b.Navigation("AssignTo");
+                });
+
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.ReturnRequest", b =>
+                {
+                    b.HasOne("Rookie.AssetManagement.DataAccessor.Entities.User", "AcceptedUser")
+                        .WithMany("ReturnsAccept")
+                        .HasForeignKey("AcceptedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Rookie.AssetManagement.DataAccessor.Entities.Assignment", "Assignment")
+                        .WithOne("ReturnRequest")
+                        .HasForeignKey("Rookie.AssetManagement.DataAccessor.Entities.ReturnRequest", "AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rookie.AssetManagement.DataAccessor.Entities.User", "RequestedUser")
+                        .WithMany("ReturnsRequest")
+                        .HasForeignKey("RequestedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AcceptedUser");
+
+                    b.Navigation("Assignment");
+
+                    b.Navigation("RequestedUser");
+                });
+
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Asset", b =>
+                {
+                    b.Navigation("Assignments");
+                });
+
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Assignment", b =>
+                {
+                    b.Navigation("ReturnRequest");
+                });
+
             modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.Category", b =>
                 {
                     b.Navigation("Assets");
+                });
+
+            modelBuilder.Entity("Rookie.AssetManagement.DataAccessor.Entities.User", b =>
+                {
+                    b.Navigation("AssignmentsBy");
+
+                    b.Navigation("AssignmentsTo");
+
+                    b.Navigation("ReturnsAccept");
+
+                    b.Navigation("ReturnsRequest");
                 });
 #pragma warning restore 612, 618
         }

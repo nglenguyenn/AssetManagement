@@ -69,8 +69,8 @@ const FirstTimeChangePassword = () => {
                     label="New Password"
                     isrequired
                   />
-                  {error?.error && (
-                    <div className="invalid">{error.message}</div>
+                  {(
+                    <div className="invalid">{error}</div>
                   )}
                   <div className="text-right mt-5 ">
                     <button

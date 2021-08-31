@@ -18,6 +18,7 @@ type UserState = {
     disable: boolean;
     user: IUser | null;
     createdUser?: IUser;
+    selectUser?: IUser | null;
     // showCreatedRecord: boolean;
 }
 
@@ -26,6 +27,7 @@ const initialState: UserState = {
     loading: false,
     disable: false,
     user: null,
+    selectUser: null,
     // showCreatedRecord: false,
 }
 
@@ -81,8 +83,10 @@ const UserReducerSlice = createSlice({
         cleanUp: (state) => ({
             ...state,
             loading: false,
+            users: null,
             status: undefined,
             error: undefined,
+            selectUser: null,
         }),
 
         getUser: (state: UserState, action: PayloadAction<number>) => ({

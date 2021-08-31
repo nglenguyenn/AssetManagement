@@ -90,6 +90,45 @@ namespace Rookie.AssetManagement.IntegrationTests
         }
 
         [Fact]
+        public async Task EditUserSuccess()
+        {
+            //Arrage
+            var userEditDto = UserArrangeData.GetUserEditDto();
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(UserClaims.Id, "1"),
+                new Claim(UserClaims.StaffCode, "SD0000"),
+                new Claim(UserClaims.FullName, "Tran Cuong"),
+                new Claim(UserClaims.Location, "HCM"),
+                new Claim(UserClaims.Role, "ADMIN")
+            }, "mock"));
+
+            _userController.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
+
+            ActionResult<User> result;
+
+            //Action
+            using (var scope = _dbContext.Database.BeginTransaction())
+            {
+                result = (ActionResult)await _userController.EditUser(userEditDto);
+                scope.Dispose();
+            }
+
+            //Assert
+            var actionResult = Assert.IsType<OkObjectResult>(result.Result);
+            var createdUser = Assert.IsType<User>(actionResult.Value);
+            Assert.Equal(userEditDto.DateOfBirth, createdUser.DateOfBirth);
+            Assert.Equal(userEditDto.Gender, createdUser.Gender);
+            Assert.Equal(userEditDto.JoinedDate, createdUser.JoinedDate);
+            Assert.Equal(userEditDto.Type, createdUser.Type);
+            Assert.Equal("SD0000", createdUser.StaffCode);
+            Assert.Equal("adminhcm", createdUser.UserName);
+        }
+
+        [Fact]
         public async Task GetUsersSuccess()
         {
             //Arrange
@@ -108,7 +147,7 @@ namespace Rookie.AssetManagement.IntegrationTests
             };
 
             //Action
-            ActionResult<PagedResponseModel<UserDto>> result = 
+            ActionResult<PagedResponseModel<UserDto>> result =
                 (ActionResult) await _userController.GetUsers(userQueryCriteria, CancellationToken.None);
 
             //Assert

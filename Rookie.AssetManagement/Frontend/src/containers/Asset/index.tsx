@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { Route, Switch } from "react-router-dom";
-import { ASSET, CREATE_ASSET } from "src/constants/pages";
+import { ASSET, CREATE_ASSET, EDIT_ASSET } from "src/constants/pages";
 import NotFound from "../NotFound";
 
 
@@ -14,6 +14,11 @@ const routes = [
   {
     path: CREATE_ASSET,
     component: lazy(() => import("../Asset/Create")),
+    exact: true,
+  },
+  {
+    path: EDIT_ASSET,
+    component: lazy (() => import("../Asset/Edit")),
     exact: true,
   }
 ];

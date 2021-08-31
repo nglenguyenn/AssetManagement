@@ -8,11 +8,10 @@ namespace Rookie.AssetManagement.Contracts.Enums
 {
     public enum AssetState
     {
-        Available,
-        WaitingForApproval,
-        NotAvailable,
         Assigned,
-        WaitingForRecycling,
-        Recycled
+        Available,
+        NotAvailable,
+        Recycled,
+        WaitingForRecycling
     }
 }

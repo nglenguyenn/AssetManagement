@@ -1,5 +1,15 @@
 import ISelectOption from "src/interfaces/ISelectOption";
 import {
+  AcceptedAssignment,
+  AcceptedAssignmentLabel,
+  AcceptedAssignmentString,
+  AllStateAssignment,
+  AllStateAssignmentLabel,
+  WaitingAssignment,
+  WaitingAssignmentLabel,
+  WaitingAssignmentString
+} from "./Assignment/StateConstants";
+import {
   MaleUserGender,
   FemaleUserGender,
   MaleUserGenderLabel,
@@ -13,29 +23,7 @@ import {
   AllUserType,
   AllUserTypeLabel,
 } from "./User/RoleConstants";
-import {
-  AvailableAsset,
-  UnavailableAsset,
-  AvailableAssetLabel,
-  UnavailableAsetLabel,
-  AllAssetLabel,
-  AllStateAsset,
-  AssignedAssetLabel,
-  AssignedAsset,
-  WaitingAsset,
-  WaitingAssetLabel,
-  RecycledAsset,
-  RecycledAssetLabel
-} from "./Asset/StateConstants";
 
-import {
-  LaptopCategory,
-  MonitorCategoryLabel,
-  LaptopCategoryLabel,
-  MonitorCategory,
-  PersonalComputerCategory,
-  PersonalComputerCategoryLabel,
-} from "./Asset/CategoryConstants";
 
 export const UserTypeOptions: ISelectOption[] = [
   { id: 1, label: AdminUserTypeLabel, value: AdminUserType },
@@ -52,27 +40,15 @@ export const FilterUserTypeOptions: ISelectOption[] = [
   { id: 1, label: AdminUserTypeLabel, value: AdminUserType },
   { id: 2, label: StaffUserTypeLabel, value: StaffUserType },
 ];
-export const AssetStateOptions: ISelectOption[] = [
-  { id: 1, label: AvailableAssetLabel, value: AvailableAsset },
-  { id: 2, label: UnavailableAsetLabel, value: UnavailableAsset },
+
+
+export const FilterAssignmentStateOptions: ISelectOption[] = [
+  { id: 0, label: AllStateAssignmentLabel, value: AllStateAssignment },
+  { id: 1, label: AcceptedAssignmentLabel, value: AcceptedAssignment },
+  { id: 2, label: WaitingAssignmentLabel, value: WaitingAssignment },
 ];
 
-export const AssetCategoryOptions: ISelectOption[] = [
-  { id: 1, label: LaptopCategoryLabel, value: LaptopCategory },
-  { id: 2, label: MonitorCategoryLabel, value: MonitorCategory },
-  { id: 3, label: PersonalComputerCategoryLabel, value: PersonalComputerCategory},
-];
-
-export const FilterAssetStateOptions: ISelectOption[] = [
-  { id: 0, label: AllAssetLabel, value: AllStateAsset },
-  { id: 1, label: AvailableAssetLabel, value: AvailableAsset },
-  { id: 2, label: AssignedAssetLabel, value: AssignedAsset},
-  { id: 3, label: UnavailableAsetLabel, value: UnavailableAsset },
-  { id: 4, label: WaitingAssetLabel, value: WaitingAsset },
-  { id: 5, label: RecycledAssetLabel, value: RecycledAsset },
-];
-export const FilterAssetCategoryOptions: ISelectOption[] = [
-  { id: 0, label: LaptopCategoryLabel, value: LaptopCategory },
-  { id: 1, label: MonitorCategoryLabel, value: MonitorCategory },
-  { id: 2, label: PersonalComputerCategoryLabel, value: PersonalComputerCategory },
+export const AssignmentStates: ISelectOption[] = [
+  { id: 1, label: AcceptedAssignmentLabel, value: AcceptedAssignmentString },
+  { id: 2, label: WaitingAssignmentLabel, value: WaitingAssignmentString },
 ];

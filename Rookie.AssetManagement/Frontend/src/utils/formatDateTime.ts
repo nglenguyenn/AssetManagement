@@ -13,3 +13,10 @@ export const convertDate = (date) => {
     dateData.setMinutes(dateData.getMinutes() - dateData.getTimezoneOffset());
     return [dateData.getDate(), dateData.getMonth() + 1, dateData.getFullYear()].join("/");
  };
+
+ export const convertDate2 = (date) => {
+    const dateData = new Date(date);
+    dateData.setMinutes(dateData.getMinutes() - dateData.getTimezoneOffset());
+    return [dateData.getMonth() + 1, dateData.getDate(), dateData.getFullYear()].join("/");
+ };
+  

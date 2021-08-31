@@ -29,6 +29,19 @@
             public const string UserNotFoundError = "User not found";
             public const string TokenNotFoundError = "Token not found";
             public const string JoinedDateWhenAgeNotEnough = "User under the age of 18 may not join company. Please select a different date";
+            public const string NewPasswordIsNotDifferent = "New password must be different than old password";
+        }
+
+        public static class Assignment
+        {
+            public const string StateFilter = "{0} is not a in-progress state";
+            public const string AssignmentNotFoundError = "Assignment not found";
+
+        }
+        
+        public static class Asset
+        {
+            public const string AssetNotFoundError = "Asset not found";
         }
     }
 }

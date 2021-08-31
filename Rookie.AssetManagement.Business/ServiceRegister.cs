@@ -16,6 +16,7 @@ namespace Rookie.AssetManagement.Business
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAssetService, AssetService>();
+            services.AddScoped<IAssignmentService, AssignmentService>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim(UserClaims.Role, Roles.Admin));

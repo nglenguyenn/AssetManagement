@@ -25,7 +25,7 @@ export function* handleCreateNewUser(
             })
         );
 
-    } catch (error) {
+    } catch (error:any) {
         const errorModel = error.response.data as IError;
 
         yield put(
@@ -42,7 +42,7 @@ export function* handleGetUser(action: PayloadAction<number>) {
     try {
         const { data } = yield call(getUserRequest, values);
         yield put(setUser(data));
-    } catch (error) {
+    } catch (error:any) {
         const errorModel = error.response.data as IError;
 
         yield put(
@@ -62,7 +62,7 @@ export function* handleGetUsers(action: PayloadAction<IQueryUserModel>) {
 
         yield put(setUsers(data));
     }
-    catch (error) {
+    catch (error:any) {
         const errorModel = error.response.data as IError;
 
         yield put(setStatus({
@@ -73,11 +73,14 @@ export function* handleGetUsers(action: PayloadAction<IQueryUserModel>) {
 }
 
 export function* handleEditUser(
-    action: PayloadAction<IUser>
+    action: PayloadAction<IUserForm>
 ) {
     const values = action.payload;
     try {
-        yield call(putEditUser, values);
+        const { data } = yield call(putEditUser, values);
+
+        yield put(postUserComplete(data as IUser))
+
         yield put(
             setStatus({
                 status: Status.Success,
@@ -85,7 +88,7 @@ export function* handleEditUser(
             })
         );
 
-    } catch (error) {
+    } catch (error:any) {
         const errorModel = error.response.data as IError;
         yield put(
             setStatus({

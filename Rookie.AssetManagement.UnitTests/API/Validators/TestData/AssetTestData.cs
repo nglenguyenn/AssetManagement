@@ -1,12 +1,10 @@
 ﻿using Rookie.AssetManagement.Contracts.Constants;
 using Rookie.AssetManagement.Contracts.Dtos.AssetDtos;
+using Rookie.AssetManagement.Contracts.EnumDtos;
 using Rookie.AssetManagement.Contracts.Enums;
 using Rookie.AssetManagement.DataAccessor.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
 {
@@ -115,7 +113,6 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
                 new object[] { AssetState.Available },
                 new object[] { AssetState.NotAvailable },
                 new object[] { AssetState.Recycled },
-                new object[] { AssetState.WaitingForApproval },
                 new object[] { AssetState.WaitingForRecycling }
             };
         }
@@ -183,5 +180,68 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
                 State = AssetState.Available
             };
         }
+
+        public static AssetEditDto GetAssetEditDto(int id)
+        {
+            return new AssetEditDto()
+            {
+                Id = id,
+                AssetName = "new asset name",
+                InstalledDate = new DateTime(2021, 8, 1),
+                Specification = "new specification",
+                State = AssetState.Available
+            };
+        }
+
+        public static IEnumerable<object[]> ValidId()
+        {
+            return new object[][]
+            {
+                new object[] { 1 },
+                new object[] { 2 }
+            };
+        }
+
+        public static IEnumerable<object[]> InvalidId()
+        {
+            return new object[][]
+            {
+                new object[]
+                {
+                    null,
+                    string.Format(ErrorTypes.Common.RequiredError, nameof(AssetEditDto.Id), 0)
+                }
+            };
+        }
+        public static List<Asset> GetAssets()
+        {
+            return new List<Asset>()
+            {
+                new Asset
+                {
+                    Id = 1,
+                    AssetName = "Asset 1 HCM",
+                    AssetCode = "LA000000",
+                    Specification = "Specification for Asset 2 HCM",
+                    InstalledDate = DateTime.Now,
+                    Location = "HCM",
+                    State = AssetState.Available,
+                    CategoryId = 1,
+                }
+            };
+        }
+
+        public static AssetQueryCriteriaDto GetAssetQueryCriteriaDto()
+        {
+            return new AssetQueryCriteriaDto()
+            {
+                State = new AssetState[] { AssetState.Available },
+                Limit = 5,
+                Location = Location.HCM,
+                Page = 1,
+                SortColumn = "Id",
+                SortOrder = SortOrderEnumDto.Decsending
+            };
+        }  
     }
 }

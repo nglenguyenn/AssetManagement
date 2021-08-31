@@ -23,7 +23,7 @@ export function* handleLogin(action: PayloadAction<ILoginModel>) {
   try {
     const { data } = yield call(loginRequest, loginModel);
     yield put(setAccount(data));
-  } catch (error) {
+  } catch (error:any) {
     const errorModel = error.response.data as IError;
     yield put(
       setStatus({
@@ -54,7 +54,7 @@ export function* handleChangePassword(action: PayloadAction<IChangePassword>) {
         error: undefined,
       })
     );
-  } catch (error) {
+  } catch (error:any) {
     const errorModel = error.response.data as IError;
 
     yield put(
@@ -74,9 +74,8 @@ export function* handleFirstTimeChangePassword(
   try {
     yield call(putFirstTimeChangePassword, values);
     yield put(me());
-  } catch (error) {
+  } catch (error:any) {
     const errorModel = error.response.data as IError;
-
     yield put(
       setStatus({
         status: Status.Failed,

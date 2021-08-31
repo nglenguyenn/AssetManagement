@@ -5,9 +5,10 @@ type Props = {
     disable?: boolean;
     className?: string;
     onClick?: Function;
+    isSelecting?: boolean;
 }
 
-const ButtonIcon: React.FC<Props> = ({ children, disable, onClick, className }) => {
+const ButtonIcon: React.FC<Props> = ({ children, disable, onClick, className, isSelecting = false }) => {
     const style = disable ? 'disable' : 'pointer';
 
     const handleClick = (e) => {
@@ -19,7 +20,7 @@ const ButtonIcon: React.FC<Props> = ({ children, disable, onClick, className }) 
     }
 
     return (
-        <div onClick={handleClick} className={`${style} ${className}`}>
+        <div style={isSelecting ? { display: "none" } : {}} onClick={handleClick} className={`${style} ${className}`}>
             {children}
         </div>
     );

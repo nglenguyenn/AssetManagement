@@ -140,6 +140,23 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
             };
         }
 
+        public static IEnumerable<object[]> ValidEditJoinedDateAndDateOfBirth()
+        {
+            return new object[][]
+            {
+                new object[]
+                {
+                    new UserEditDto()
+                    {
+                        DateOfBirth = new DateTime(1996, 1, 1),
+                        Gender = true,
+                        JoinedDate = new DateTime(2015, 1, 1),
+                        Type = UserConstants.Common.StaffRole
+                    }
+                }
+            };
+        }
+
         public static IEnumerable<object[]> InvalidJoinedDateAndDateOfBirth()
         {
             return new object[][]
@@ -184,6 +201,54 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
             };
         }
 
+        public static IEnumerable<object[]> InvalidEditJoinedDateAndDateOfBirth()
+        {
+            return new object[][]
+            {
+                new object[]
+                {
+                    new UserEditDto
+                    {
+                        DateOfBirth = new DateTime(1996, 1, 1),
+                        Gender = true,
+                        JoinedDate = new DateTime(1995, 1, 1),
+                        Type = UserConstants.Common.StaffRole
+                    },
+                    string.Format(ErrorTypes.User.JoinedDateError, nameof(UserCreateDto))
+                },
+                new object[]
+                {
+                    new UserEditDto()
+                    {
+                        DateOfBirth = new DateTime(1996, 1, 1),
+                        Gender = true,
+                        JoinedDate = new DateTime(2021, 8, 7),
+                        Type = UserConstants.Common.StaffRole
+                    },
+                    string.Format(ErrorTypes.User.JoinedDateWeekendError, nameof(UserCreateDto))
+                },
+                new object[]
+                {
+                    new UserEditDto()
+                    {
+                        DateOfBirth = new DateTime(1996, 1, 1),
+                        Gender = true,
+                        JoinedDate = new DateTime(2021, 8, 8),
+                        Type = UserConstants.Common.StaffRole
+                    },
+                    string.Format(ErrorTypes.User.JoinedDateWeekendError, nameof(UserCreateDto))
+                }
+            };
+        }
+
+        public static IList<string> GetRole(string type)
+        {
+            return new List<string>
+            {
+                "ADMIN"
+            };
+        }
+
         public static ClaimsIdentity GetClaims()
         {
             return new ClaimsIdentity(new Claim[]
@@ -206,6 +271,46 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators.TestData
                 Gender = true,
                 JoinedDate = new DateTime(2019, 1, 1),
                 Type = UserConstants.Common.StaffRole
+            };
+        }
+
+        public static UserEditDto getUserEditDto()
+        {
+            return new UserEditDto()
+            {
+                Id = 1,
+                DateOfBirth = new DateTime(1996, 10, 10),
+                Gender = true,
+                JoinedDate = new DateTime(2019, 1, 1),
+                Type = UserConstants.Common.AdminRole,
+                TimeOffset = 0 , 
+            };
+        }
+
+        public static User GetEditingUser()
+        {
+            return new User()
+            {
+                Id = 1,
+                StaffCode = "SD001",
+                UserName = "whatthehell",
+                Location = Location.HCM,
+                FirstName = "",
+                LastName = "",
+                DateOfBirth = new DateTime(2000, 10, 1),
+                Gender = true,
+                JoinedDate = new DateTime(2019, 1, 1),
+                Type = UserConstants.Common.AdminRole,
+                IsDisabled = false,
+                Email ="",
+                EmailConfirmed = true,
+                IsFirstChangePassword = true,
+                PhoneNumber = "", 
+                PhoneNumberConfirmed = true,
+                ConcurrencyStamp = "1" ,
+                NormalizedEmail ="" ,
+                NormalizedUserName = "", 
+                               
             };
         }
 

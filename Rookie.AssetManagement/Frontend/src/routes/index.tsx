@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
-import { ASSET, CHANGE_PASSWORD, HOME, LOGIN, USER } from "../constants/pages";
+import { ASSET, ASSIGNMENT, CHANGE_PASSWORD, HOME, LOGIN, USER } from "../constants/pages";
 import InLineLoader from "../components/InlineLoader";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import LayoutRoute from "./LayoutRoute";
@@ -14,6 +14,7 @@ const Home = lazy(() => import("../containers/Home"));
 const Login = lazy(() => import("../containers/Authorize"));
 const User = lazy(() => import("../containers/User"));
 const Asset = lazy(() => import("../containers/Asset"));
+const Assignment = lazy(()=> import("../containers/Assignment"))
 const ChangePassword = lazy(() => import("../containers/ChangePassword"));
 const FirstTimeChangePassword = lazy(
   () => import("../containers/FirstTimeChangePassword")
@@ -46,6 +47,10 @@ const Routes = () => {
 
         <PrivateRoute path={ASSET}>
           <Asset />
+        </PrivateRoute>
+        
+        <PrivateRoute path={ASSIGNMENT}>
+          <Assignment />
         </PrivateRoute>
 
         <Route exact path={CHANGE_PASSWORD} component={ChangePassword} />

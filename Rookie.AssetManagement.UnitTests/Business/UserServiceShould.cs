@@ -52,6 +52,9 @@ namespace Rookie.AssetManagement.UnitTests.Business
             var roleManager = _userStore.As<IUserRoleStore<User>>()
                 .Setup(x => x.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
+            _userStore.As<IUserRoleStore<User>>()
+                .Setup(x => x.GetRolesAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(It.IsAny<IList<string>>());
 
             _userManager = new UserManager<User>(_userStore.Object, null,
                 _passwordHasher.Object, null, null, null, null, null, null);
@@ -187,6 +190,83 @@ namespace Rookie.AssetManagement.UnitTests.Business
         }
 
         [Fact]
+        public async Task ValidEditUserShouldBeSuccess()
+        {
+            //Arrage
+            var existedUser = UserTestData.GetUsers().AsQueryable().BuildMock();
+            var user = UserTestData.GetClaims();
+
+            var userEditDto = UserTestData.getUserEditDto();
+
+            _userStore
+                .Setup(x => x.FindByIdAsync(userEditDto.Id.ToString(), CancellationToken.None))
+                .ReturnsAsync(UserTestData.GetEditingUser());
+
+            _userStore.As<IUserRoleStore<User>>()
+                .Setup(x => x.GetRolesAsync(It.IsAny<User>(), CancellationToken.None))
+                .ReturnsAsync(UserTestData.GetRole(UserTestData.GetEditingUser().Type));
+
+            _userRepository
+                .Setup(x => x.Entities)
+                .Returns(existedUser.Object);
+            _userStore
+                .Setup(x => x.UpdateAsync(UserTestData.GetEditingUser(), CancellationToken.None))
+                .ReturnsAsync(IdentityResult.Success);
+
+
+            //Action
+            IActionResult result = await _userService.EditUserAsync(user, userEditDto);
+
+            //Assert
+            result.Should().NotBeNull();
+            _userStore.Verify(mock => mock.UpdateAsync(It.IsAny<User>(), CancellationToken.None), Times.Once);
+        }
+
+        [Fact]
+        public async Task EditNullIdentityShouldBeUnauthorized()
+        {
+            //Arrage
+            var userEditDto = UserTestData.getUserEditDto();
+
+            //Action
+            IActionResult result = await _userService.EditUserAsync(null, userEditDto);
+
+            //Assert
+            var unauthorizedResult = new UnauthorizedResult();
+            Assert.Equal(unauthorizedResult.ToString(), result.ToString());
+        }
+
+        [Fact]
+        public async Task NotRoleAdminEditShouldBeUnauthorized()
+        {
+            //Arrage
+            var userEditDto = UserTestData.getUserEditDto();
+            var user = UserTestData.GetClaims();
+            user.RemoveClaim(user.FindFirst(UserClaims.Role));
+            user.AddClaim(new Claim(UserClaims.Role, "STAFF"));
+
+            //Action
+            IActionResult result = await _userService.EditUserAsync(user, userEditDto);
+
+            //Assert
+            var unauthorizedResult = new UnauthorizedResult();
+            Assert.Equal(unauthorizedResult.ToString(), result.ToString());
+        }
+
+        [Fact]
+        public async Task NullUserEditDtoShouldBeUnauthorized()
+        {
+            //Arrage
+            var user = UserTestData.GetClaims();
+
+            //Action
+            IActionResult result = await _userService.EditUserAsync(user, null);
+
+            //Assert
+            var badRequestResult = new BadRequestResult();
+            Assert.Equal(badRequestResult.ToString(), result.ToString());
+        }
+        [Fact]
         public async Task ValidUserQueryCriteriaShouldBeSuccess()
         {
             //Arrage
@@ -203,7 +283,7 @@ namespace Rookie.AssetManagement.UnitTests.Business
                 .Setup(x => x.Entities)
                 .Returns(existedUsers.Object);
             //Action
-            ActionResult<PagedResponseModel<UserDto>> result = 
+            ActionResult<PagedResponseModel<UserDto>> result =
                 (ActionResult) await _userService.GetUserListAsync(identity, userQueryCriteria, CancellationToken.None);
 
             //Assert

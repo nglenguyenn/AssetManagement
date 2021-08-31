@@ -38,6 +38,7 @@ namespace Rookie.AssetManagement.Controllers
             return await _userService.GetUserListAsync(identity, userQueryCriteria, cancellationToken);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -45,7 +46,7 @@ namespace Rookie.AssetManagement.Controllers
             return Ok(userResponses);
         }
 
-        [Authorize] 
+        [Authorize]
         [HttpPost]
         [Route("edit")]
         public async Task<IActionResult> EditUser([FromBody] UserEditDto userEditDto)

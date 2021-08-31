@@ -91,6 +91,8 @@ namespace Rookie.AssetManagement.Business.Services
 
             if (user.IsFirstChangePassword == false)
             {
+                if (await _userManager.CheckPasswordAsync(user, accountChangePassFirstTimeDto.NewPassword))
+                    return Conflict(ErrorTypes.User.NewPasswordIsNotDifferent);
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
                 var result = await _userManager.ResetPasswordAsync(user, token, accountChangePassFirstTimeDto.NewPassword);

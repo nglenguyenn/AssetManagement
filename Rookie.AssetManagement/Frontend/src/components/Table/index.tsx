@@ -3,6 +3,8 @@ import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
 import IColumnOption from "src/interfaces/IColumnOption";
 
 import Paging, { PageType } from "./Paging";
+import { Search } from "react-feather";
+
 
 export type SortType = {
   columnValue: string;
@@ -26,9 +28,10 @@ type Props = {
   sortState: SortType;
   handleSort: (colValue: string) => void;
   page?: PageType;
+  isSelecting?: boolean;
 };
 
-const Table: React.FC<Props> = ({ columns, children, page, sortState, handleSort }) => {
+const Table: React.FC<Props> = ({ columns, children, page, sortState, handleSort, isSelecting = false }) => {
 
   return (
     <>
@@ -36,6 +39,8 @@ const Table: React.FC<Props> = ({ columns, children, page, sortState, handleSort
         <table className="table">
           <thead>
             <tr>
+              <th style={isSelecting ? {} : { display: "none" }}>
+              </th>
               {
                 columns.map((col, i) => (
                   <th key={i}>

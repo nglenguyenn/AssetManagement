@@ -14,12 +14,15 @@ import UserDetailsModal from "../Details";
 import { getUser } from "../reducer";
 import UserRecord from "./UserRecords";
 import { convertDate } from "src/utils/formatDateTime";
+import { formatName } from "src/utils/helper";
+
+
 const columns: IColumnOption[] = [
-  { columnName: "Staff Code", columnValue: "staffCode" },
-  { columnName: "Full Name", columnValue: "fullName" },
-  { columnName: "Username", columnValue: "userName" },
-  { columnName: "Joined Date", columnValue: "joinedDate" },
-  { columnName: "Type", columnValue: "type" },
+  { columnName: "Staff Code", columnValue: "staffCode", isSelected: true },
+  { columnName: "Full Name", columnValue: "fullName", isSelected: true },
+  { columnName: "Username", columnValue: "userName", isSelected: false },
+  { columnName: "Joined Date", columnValue: "joinedDate", isSelected: false },
+  { columnName: "Type", columnValue: "type", isSelected: true },
 ];
 
 type Props = {
@@ -28,6 +31,9 @@ type Props = {
   handleSort: (colValue: string) => void;
   sortState: SortType;
   fetchData: Function;
+  isSelecting?: boolean;
+  setSelectRecord?: (user: IUser | null) => void;
+  selectedUser?: IUser | null;
 }
 
 const UserTable: React.FC<Props> = ({
@@ -36,6 +42,9 @@ const UserTable: React.FC<Props> = ({
   handleSort,
   sortState,
   fetchData,
+  isSelecting = false,
+  setSelectRecord,
+  selectedUser = null,
 }) => {
   const dispatch = useAppDispatch();
   const { user, createdUser, userResult } = useAppSelector((state) => state.userReducer);
@@ -58,6 +67,11 @@ const UserTable: React.FC<Props> = ({
     showUserDetailsModal();
   };
 
+  const handleSelect = (id: number) => {
+    const foundUser = users?.items.find(user => user.id == id) || null
+    if (setSelectRecord) setSelectRecord(foundUser);
+  }
+
   const handleEdit = (id: number) => {
     dispatch(getUser(id));
     history.push(USER_EDIT);
@@ -65,17 +79,6 @@ const UserTable: React.FC<Props> = ({
 
   const handleDisable = (id: number) => {
     // disable request; 
-  };
-
-  const getFullName = (firstName: string, lastName: string) => {
-    if (firstName === undefined)
-      return lastName;
-    if (lastName === undefined)
-      return firstName;
-
-    const firstNameWithSpace = firstName.concat(" ");
-    return firstNameWithSpace.concat(lastName);
-    return firstName;
   };
 
   const getType = (type: string) => {
@@ -92,10 +95,19 @@ const UserTable: React.FC<Props> = ({
     setShowModalUserDetails(false);
   };
 
+
+  const handleShowColumn = (): IColumnOption[] => {
+    if (isSelecting) {
+      return columns.filter(column => column.isSelected === true)
+    }
+
+    return columns
+  }
+
   return (
     <>
       <Table
-        columns={columns}
+        columns={handleShowColumn()}
         handleSort={handleSort}
         sortState={sortState}
         page={{
@@ -103,31 +115,39 @@ const UserTable: React.FC<Props> = ({
           totalPage: users?.totalPages,
           handleChange: handlePage,
         }}
+        isSelecting={isSelecting}
       >
         {
-          (createdUser !== undefined) && (foundUser === undefined) ?
-            <UserRecord
-              data={createdUser}
-              handleDisable={handleDisable}
-              handleEdit={handleEdit}
-              handleShowInfo={handleShowInfo}
-            />
+          isSelecting === false ?
+            (createdUser !== undefined) ?
+              <UserRecord
+                data={createdUser}
+                handleDisable={handleDisable}
+                handleEdit={handleEdit}
+                handleShowInfo={isSelecting ? handleSelect : handleShowInfo}
+                isSelecting={isSelecting}
+                selectedUser={selectedUser}
+              />
+              : <></>
             : <></>
         }
         {
           users?.items.map((data, index) => (
-            <UserRecord key={index}
-              data={data}
-              handleDisable={handleDisable}
-              handleEdit={handleEdit}
-              handleShowInfo={handleShowInfo}
-            />
+            (data.id !== foundUser?.id || isSelecting == true) ?
+              <UserRecord key={index}
+                data={data}
+                handleDisable={handleDisable}
+                handleEdit={handleEdit}
+                handleShowInfo={isSelecting ? handleSelect : handleShowInfo}
+                isSelecting={isSelecting}
+                selectedUser={selectedUser}
+              /> : <></>
           ))}
       </Table>
-            
-      <UserDetailsModal 
-        isShow={showModalUserDetails} 
-        onHide={hideUserDetailsModal} 
+
+      <UserDetailsModal
+        isShow={showModalUserDetails}
+        onHide={hideUserDetailsModal}
         hide={hideUserDetailsModal}
         user={user} />
     </>);

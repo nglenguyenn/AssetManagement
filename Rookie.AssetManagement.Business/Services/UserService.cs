@@ -119,52 +119,52 @@ namespace Rookie.AssetManagement.Business.Services
                 var users = await userQuery.AsNoTracking().PaginateAsync(userQueryCriteria, cancellationToken);
                 var userDtos = _mapper.Map<IEnumerable<UserDto>>(users.Items);
 
-                return Ok(new PagedResponseModel<UserDto> {
-                    CurrentPage = users.CurrentPage,
-                    TotalPages = users.TotalPages,
-                    TotalItems = users.TotalItems,
-                    Items = userDtos
-                });
-            }
+            return Ok(new PagedResponseModel<UserDto> {
+                CurrentPage = users.CurrentPage,
+                TotalPages = users.TotalPages,
+                TotalItems = users.TotalItems,
+                Items = userDtos
+            });
+        }
 
-            private IQueryable<User> UserFilter(
-                IQueryable<User> userQuery,
-                UserQueryCriteriaDto userQueryCriteria)
+        private IQueryable<User> UserFilter(
+            IQueryable<User> userQuery,
+            UserQueryCriteriaDto userQueryCriteria)
+        {
+            var location = userQueryCriteria.Location;
+            var searchValue = userQueryCriteria.Search;
+
+            userQuery = userQuery.Where(u => u.Location == location);
+            if (!String.IsNullOrEmpty(searchValue))
             {
-                var location = userQueryCriteria.Location;
-                var searchValue = userQueryCriteria.Search;
-
-                userQuery = userQuery.Where(u => u.Location == location);
-                if (!String.IsNullOrEmpty(searchValue))
-                {
-                    userQuery = userQuery.Where(u => u.StaffCode.Contains(searchValue) ||
-                    (u.FirstName + " " + u.LastName).Contains(searchValue));
-                }
-                if (userQueryCriteria.Types != null &&
-                    userQueryCriteria.Types.Count() > 0 &&
-                    !userQueryCriteria.Types.Any(x => x == UserTypeFilter.All))
-                {
-                    userQuery = userQuery.Where(u =>
-                        userQueryCriteria.Types.Any(t => t == u.Type));
-                }
-
-                return userQuery;
+                userQuery = userQuery.Where(u => u.StaffCode.Contains(searchValue) ||
+                (u.FirstName + " " + u.LastName).Contains(searchValue));
             }
-
-            public async Task<UserDto> GetUserByIdAsync(int id)
+            if (userQueryCriteria.Types != null &&
+                userQueryCriteria.Types.Count() > 0 &&
+                !userQueryCriteria.Types.Any(x => x == UserTypeFilter.All))
             {
-                var user = await _userRepository.Entities
-                    .Where(x => !x.IsDisabled)
-                    .FirstOrDefaultAsync(b => b.Id == id);
-
-                if (user == null)
-                {
-                    throw new NotFoundException($"User {id} is not found");
-                }
-                var userDto = _mapper.Map<UserDto>(user);
-
-                return userDto;
+                userQuery = userQuery.Where(u =>
+                    userQueryCriteria.Types.Any(t => t == u.Type));
             }
+
+            return userQuery;
+        }
+
+        public async Task<UserDto> GetUserByIdAsync(int id)
+        {
+            var user = await _userRepository.Entities
+                .Where(x => !x.IsDisabled)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (user == null)
+            {
+                throw new NotFoundException($"User {id} is not found");
+            }
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
+        }
         }
     } 
 

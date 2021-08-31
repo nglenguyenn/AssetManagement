@@ -1,4 +1,5 @@
 export default interface IAssetForm {
+        id?: number,
         assetName:string,
         categoryId:number,
         specification:string,

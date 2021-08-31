@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { ThreeDots } from 'react-bootstrap-icons';
+import { NEAR_BY_PAGE_RENDER_LIMIT, DOTS } from 'src/constants/tablePaginationOption';
+import { range } from 'src/utils/helper'
+import { usePagination } from 'src/hooks/usePagination';
 
 export type PageType = {
     currentPage?: number;
@@ -9,6 +13,12 @@ export type PageType = {
 const Paging: React.FC<PageType> = ({ currentPage = 1, totalPage = 1, handleChange }) => {
     const prePageStyle = currentPage !== 1 ? 'pagination__link' : 'pagination__link link-disable';
     const nextPageStyle = currentPage + 1 <= totalPage ? 'pagination__link' : 'pagination__link link-disable';
+
+    const pagination = usePagination({
+        currentPage,
+        totalPage,
+        siblingCount: NEAR_BY_PAGE_RENDER_LIMIT,
+    });
 
     const pageStyle = (page: number) => {
         if (page === currentPage) return 'pagination__link link-active';
@@ -46,14 +56,23 @@ const Paging: React.FC<PageType> = ({ currentPage = 1, totalPage = 1, handleChan
                 </li>
 
                 {
-                    [...Array(totalPage).keys()].map(i => (
-                        <li key={i} className="intro-x">
-                            <a onClick={e => onPageNumber(e, i + 1)} className={pageStyle(i + 1)}
-                            >
-                                {i + 1}
-                            </a>
-                        </li>
-                    ))
+                    pagination?.map(pageNumber => {
+                        if (pageNumber === DOTS) {
+                            return (
+                                <li className="intro-x p-2">
+                                    <ThreeDots className="intro-x " />
+                                </li>
+                            )
+                        }
+
+                        return (
+                            <li key={pageNumber} className="intro-x">
+                                <a onClick={e => onPageNumber(e, pageNumber)} className={pageStyle(pageNumber)}
+                                >
+                                    {pageNumber}
+                                </a>
+                            </li>)
+                    })
                 }
 
                 <li className="intro-x">
@@ -66,3 +85,4 @@ const Paging: React.FC<PageType> = ({ currentPage = 1, totalPage = 1, handleChan
 };
 
 export default Paging;
+

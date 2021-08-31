@@ -15,6 +15,14 @@ namespace Rookie.AssetManagement.Validators
             RuleFor(m => m.NewPassword)
                 .NotEmpty()
                 .WithMessage(x => string.Format(ErrorTypes.Common.RequiredError, nameof(x.NewPassword)));
+            RuleFor(m => m)
+                .Must(IsNewPasswordDifferrent)
+                .WithMessage(x => string.Format(ErrorTypes.User.NewPasswordIsNotDifferent));
+        }
+
+        private bool IsNewPasswordDifferrent(AccountChangePasswordDto accountChangePasswordDto )
+        {
+            return (accountChangePasswordDto.OldPassword != accountChangePasswordDto.NewPassword);
         }
     }
 }

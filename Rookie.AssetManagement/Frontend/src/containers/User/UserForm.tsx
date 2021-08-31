@@ -15,7 +15,7 @@ import {
 } from "src/constants/selectOptions";
 import { cleanUp, createNewUser, editUser } from "../User/reducer";
 import { Status } from "src/constants/status";
-import formatDate from "src/utils/formatDateTime";
+import { convertDate2 as changeDate } from "src/utils/formatDateTime";
 import { JoinedDateOnWeekend, DateOfBirthNotEnoughAge, JoinedDateNotEnoughAge } from "src/constants/User/ErrorMessageConstants";
 
 const initialFormValues: IUserForm = {
@@ -128,7 +128,7 @@ const UserFormContainer: React.FC<Props> = ({
     }
   }, [status, error])
 
-  initialUserForm ={...initialUserForm, dateOfBirth: new Date(formatDate(initialUserForm.dateOfBirth ?? "")), joinedDate: new Date(formatDate(initialUserForm.joinedDate ?? ""))};
+  initialUserForm ={...initialUserForm, dateOfBirth: new Date(changeDate(initialUserForm.dateOfBirth)), joinedDate: new Date(changeDate(initialUserForm.joinedDate))};
 
   mapGender();
   

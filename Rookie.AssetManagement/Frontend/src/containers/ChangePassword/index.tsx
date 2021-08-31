@@ -8,6 +8,7 @@ import PasswordField from "src/components/FormInputs/PasswordField";
 import { changePassword, cleanUp } from "../Authorize/reducer";
 import { useHistory } from "react-router-dom";
 import { Status } from "src/constants/status";
+import { NewPasswordIsNotDifferent } from "src/constants/User/ErrorMessageConstants";
 
 const initialValues: IChangepassWord = {
   oldPassword: "",
@@ -19,7 +20,21 @@ const validationSchema = Yup.object().shape({
   newPassword: Yup.string()
     .trim()
     .required("Required")
-    .min(5, "New password must be at least 5 characters"),
+    .min(5, "New password must be at least 5 characters")
+    .test(
+      "newPassword",
+      function (value) {
+        const oldPass = this.resolve(Yup.ref("oldPassword"))
+          if(value != undefined && oldPass != undefined){
+            if (oldPass === value){
+              return this.createError({
+                message: NewPasswordIsNotDifferent,
+                path:"newPassword"
+              })
+            } else return true;
+          } else return true;
+      }
+    ),
 });
 
 type Props = {

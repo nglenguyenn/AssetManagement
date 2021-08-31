@@ -1,5 +1,6 @@
 ﻿using Rookie.AssetManagement.Contracts.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace Rookie.AssetManagement.DataAccessor.Entities
 {
@@ -14,5 +15,6 @@ namespace Rookie.AssetManagement.DataAccessor.Entities
         public string Location { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
+        public ICollection<Assignment> Assignments { get; set; }
     }
 }

@@ -126,6 +126,18 @@ namespace Rookie.AssetManagement.IntegrationTests.TestData
             };
         }
 
+        public static UserEditDto GetUserEditDto()
+        {
+            return new UserEditDto()
+            {
+                Id = 1,
+                DateOfBirth = new DateTime(1996, 1, 1),
+                Gender = true,
+                JoinedDate = new DateTime(2015, 1, 1),
+                Type = UserConstants.Common.StaffRole
+            };
+        }
+
         public static UserQueryCriteriaDto GetUserQueryCriterDto()
         {
             return new UserQueryCriteriaDto()

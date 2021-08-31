@@ -16,7 +16,13 @@ export const ASSET = "/asset";
 
 export const CREATE_ASSET = "/asset/create";
 
+export const EDIT_ASSET = "/asset/edit";
+
+export const EDIT_ASSET_ID = (id: string | number) => `/asset/edit/${id}`;
+
 export const ASSIGNMENT = "/assignment";
+
+export const ASSIGNMENT_CREATE ="/assignment/create"
 
 export const RETURN = "/return";
 

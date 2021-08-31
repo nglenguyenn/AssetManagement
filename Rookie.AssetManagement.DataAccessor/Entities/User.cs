@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Rookie.AssetManagement.Contracts.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace Rookie.AssetManagement.DataAccessor.Entities
 {
@@ -17,5 +18,9 @@ namespace Rookie.AssetManagement.DataAccessor.Entities
         public Location Location { get; set; }
         public bool IsFirstChangePassword { get; set; }
         public bool IsDisabled { get; set; }
+        public virtual ICollection<ReturnRequest> ReturnsRequest { get; set; }
+        public virtual ICollection<ReturnRequest> ReturnsAccept { get; set; }
+        public virtual ICollection<Assignment> AssignmentsTo { get; set; }
+        public virtual ICollection<Assignment> AssignmentsBy { get; set; }
     }
 }

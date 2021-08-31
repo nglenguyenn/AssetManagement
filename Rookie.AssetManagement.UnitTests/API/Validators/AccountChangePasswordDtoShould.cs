@@ -35,6 +35,6 @@ namespace Rookie.AssetManagement.UnitTests.API.Validators
         public void HaveErrorWhenNewPasswordIsInValid(string password, string errorMessage) =>
             _testRunner
                 .For(m => m.NewPassword = password)
-                .ShouldHaveErrorsFor(m => m.NewPassword, errorMessage);
+                .ShouldHaveErrorsFor(m => m.NewPassword, errorMessage);        
     }
 }

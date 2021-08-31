@@ -3,8 +3,9 @@ export default interface IAsset {
     assetName: string,
     assetCode: string,
     specification: string;
-    assetState: string,
+    state: string,
     installedDate: Date,
     location: string,
     categoryId: number,
+    categoryName?: string
 }

@@ -82,7 +82,7 @@ namespace Rookie.AssetManagement.UnitTests.Business
         {
             //Arrange
             var claimsidentity = AccountTestData.GetClaims();
-            var changePassDto = new AccountChangePasswordFirstTimeDto { NewPassword = "123456" };
+            var changePassDto = new AccountChangePasswordFirstTimeDto { NewPassword = "1234567" };
             //Act
             var result = await _accountService.ChangePasswordFirstTimeAsync(claimsidentity, changePassDto);
             var objResult = result as ObjectResult;
@@ -92,6 +92,22 @@ namespace Rookie.AssetManagement.UnitTests.Business
             Assert.NotNull(result);
             Assert.Contains("Password Changed Successfully", objResult.Value.ToString());
             Assert.True(user.Result.IsFirstChangePassword);
+        }
+        [Fact]
+        public async Task ChangePasswordFirstTimeWithSamePasswordShouldFail()
+        {
+            //Arrange
+            var claimsidentity = AccountTestData.GetClaims();
+            var changePassDto = new AccountChangePasswordFirstTimeDto { NewPassword = "123456" };
+            //Act
+            var result = await _accountService.ChangePasswordFirstTimeAsync(claimsidentity, changePassDto);
+            var objResult = result as ObjectResult;
+            var user = _userManager.FindByIdAsync(claimsidentity.FindFirst(UserClaims.Id).Value);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Contains(ErrorTypes.User.NewPasswordIsNotDifferent, objResult.Value.ToString());
+            
         }
 
         [Fact]

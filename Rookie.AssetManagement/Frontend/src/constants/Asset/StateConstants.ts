@@ -1,13 +1,22 @@
-export const AllStateAsset = "0";
+export const AllStateAsset = "ALL";
+export const AssignedAsset = "0";
 export const AvailableAsset = "1";
-export const AssignedAsset = "2";
-export const UnavailableAsset = "3";
-export const WaitingAsset = "4";
-export const RecycledAsset = "5";
+export const UnavailableAsset = "2";
+export const RecycledAsset = "3";
+export const WaitingForRecycleAsset = "4";
+
 
 export const AllAssetLabel = "All";
-export const UnavailableAsetLabel = "Not Available";
-export const AvailableAssetLabel = "Available";
 export const AssignedAssetLabel = "Assigned";
-export const WaitingAssetLabel = "Waiting for recycling ";
+export const AvailableAssetLabel = "Available";
+export const UnavailableAssetLabel = "Not Available";
 export const RecycledAssetLabel = "Recycled";
+export const WaitingForRecycleAssetLabel = "Waiting for recycling ";
+
+
+export const AssignedAssetString = "Assigned";
+export const AvailableAssetString = "Available";
+export const UnavailableAssetString = "NotAvailable";
+export const RecycledAssetString = "Recycled";
+export const WaitingForRecycleAssetString = "WaitingForRecycling";
+
